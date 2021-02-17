@@ -1,4 +1,9 @@
-const INITAL_STATE = { numCol: 5, numQues: 5, edit: false };
+const INITAL_STATE = {
+  numCol: 5,
+  numQues: 5,
+  edit: false,
+  colEditName: "None",
+};
 
 function rootReducer(state = INITAL_STATE, action) {
   switch (action.type) {
@@ -16,6 +21,9 @@ function rootReducer(state = INITAL_STATE, action) {
 
     case "EDITACCESS":
       return { ...state, edit: true };
+
+    case "CURRENTEDIT":
+      return { ...state, colEditName: action.key };
 
     default:
       return state;

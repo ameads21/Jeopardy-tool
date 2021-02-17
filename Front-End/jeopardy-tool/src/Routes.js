@@ -5,7 +5,7 @@ import Login from "./components//Register Login/Login";
 import Register from "./components/Register Login/Register";
 import Template from "./components/Project/Template";
 import ColBoard from "./components/Project/ColBoard";
-import Board from "./components/Project/Board";
+import Project from "./components/Project/Project";
 
 function Routes() {
   return (
@@ -26,7 +26,7 @@ function Routes() {
         <ColBoard />
       </Route>
       <Route path="/project" exact>
-        <Board />
+        <Project />
       </Route>
       <Redirect to="/"></Redirect>
     </Switch>

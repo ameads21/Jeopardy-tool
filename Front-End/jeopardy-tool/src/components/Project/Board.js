@@ -1,10 +1,18 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Board() {
+  const dispatch = useDispatch();
+
   let { numCol, numQues, edit } = useSelector(
     (state) => state.columnAndQuestion
   );
+
+  let editColumn = (key) => {
+    if (edit) {
+      dispatch({ type: "CURRENTEDIT", key });
+    }
+  };
 
   let renderCol = () => {
     let results = [];
@@ -12,7 +20,12 @@ function Board() {
     while (tempCol > 0) {
       tempCol -= 1;
       results.unshift(
-        <th key={`Category ${tempCol}`} onClick={testing}>
+        <th
+          key={`category-${tempCol}`}
+          scope="col"
+          className={`category-${tempCol + 1}`}
+          onClick={(val) => editColumn(val.target.className.split(" ")[0])}
+        >
           Category {tempCol + 1}
         </th>
       );
@@ -34,23 +47,20 @@ function Board() {
     return rows;
   };
 
-  let testing = () => {
-    if (edit) {
-      console.log("testing");
-    }
-  };
-
   let renderQues = (val) => {
     let questions = [];
     let tempCol = numCol;
-    let categoryNum = 1;
     while (tempCol > 0) {
       questions.unshift(
-        <td key={`Category ${categoryNum}`}>
-          <button>{val}</button>
+        <td key={`Category ${tempCol}`}>
+          <button
+            className={`category-${tempCol} btn btn-secondary p-3`}
+            onClick={(val) => editColumn(val.target.className.split(" ")[0])}
+          >
+            {val}
+          </button>
         </td>
       );
-      categoryNum += 1;
       tempCol -= 1;
     }
     return questions;
@@ -58,7 +68,7 @@ function Board() {
 
   return (
     <div>
-      <table>
+      <table className="table">
         <thead>
           <tr>{renderCol()}</tr>
         </thead>

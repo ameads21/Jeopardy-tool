@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import React from "react";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 function ColForm() {
@@ -36,17 +36,29 @@ function ColForm() {
 
   return (
     <div className="container">
-      <h1>Number of categories</h1>
-      <button onClick={decrementCol}>-</button>
-      <span>{numCol}</span>
-      <button onClick={incrementCol}>+</button>
-
-      <h1>Number of questions per category</h1>
-      <button onClick={decrementQues}>-</button>
-      <span>{numQues}</span>
-      <button onClick={incrementQues}>+</button>
-      <hr></hr>
-      <button className="btn btn-success" onClick={handleSubmit}>
+      <div className="row mb-5">
+        <div className="col">
+          <h3>Number of categories</h3>
+          <button onClick={decrementCol} className="btn btn-danger">
+            -
+          </button>
+          <h3 className="ml-3 mr-3 d-inline text-center">{numCol}</h3>
+          <button onClick={incrementCol} className="btn btn-success">
+            +
+          </button>
+        </div>
+        <div className="col">
+          <h3>Number of questions</h3>
+          <button onClick={decrementQues} className="btn btn-danger">
+            -
+          </button>
+          <h3 className="ml-3 mr-3 d-inline text-center">{numQues}</h3>
+          <button onClick={incrementQues} className="btn btn-success">
+            +
+          </button>
+        </div>
+      </div>
+      <button className="btn btn-success mb-3" onClick={handleSubmit}>
         Submit
       </button>
     </div>

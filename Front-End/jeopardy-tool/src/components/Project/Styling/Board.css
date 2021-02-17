@@ -1,0 +1,11 @@
+.editToolBar {
+  height: 350px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: center;
+}
+
+td {
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+}
