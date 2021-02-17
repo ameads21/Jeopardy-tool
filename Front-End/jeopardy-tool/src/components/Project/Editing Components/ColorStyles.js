@@ -10,11 +10,11 @@ function Background({ handleChange, element, styleName, values, colors }) {
     <div>
       {colors.map((c) => (
         <div
-          className="custom-control custom-radio custom-control-inline"
+          className="custom-control custom-radio custom-control-inline mx-auto"
           data-toggle="buttons"
         >
           <input
-            className="custom-conrol-inputs d-none "
+            className="custom-conrol-inputs d-none"
             name={`${element}${styleName}`}
             type="radio"
             onChange={handleChange}
