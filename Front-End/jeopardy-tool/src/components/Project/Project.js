@@ -9,19 +9,18 @@ function ProjectMain() {
   const { colEditName } = useSelector((state) => state.columnAndQuestion);
   return (
     <div className="container-fluid project-container">
-      {colEditName === "None" ? (
-        <Board />
-      ) : (
-        <div className="row">
-          <div className="col-md-7">
-            <Board />
-          </div>
+      <div className="row">
+        <div className="col">
+          <Board />
+        </div>
+        {colEditName !== "None" ? (
           <div className="col-md-5">
             <EditBar />
           </div>
-          <Modal />
-        </div>
-      )}
+        ) : (
+          <div></div>
+        )}
+      </div>
     </div>
   );
 }
