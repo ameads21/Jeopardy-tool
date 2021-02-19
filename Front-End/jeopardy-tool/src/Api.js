@@ -23,7 +23,8 @@ class JeopardyApi {
     return res.token;
   }
   static async login(data) {
-    let res = await this.request(`auth/token`, data, "post");
+    let res = await this.request(`auth/login`, data, "post");
+    console.log("TEsting32");
     return res.token;
   }
 }

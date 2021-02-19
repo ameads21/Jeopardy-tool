@@ -7,14 +7,14 @@ import Template from "./components/Project/Template";
 import ColBoard from "./components/Project/ColBoard";
 import Project from "./components/Project/Project";
 
-function Routes() {
+function Routes({ login }) {
   return (
     <Switch>
       <Route path="/" exact>
         <Home />
       </Route>
       <Route path="/login" exact>
-        <Login />
+        <Login login={login} />
       </Route>
       <Route path="/register" exact>
         <Register />
