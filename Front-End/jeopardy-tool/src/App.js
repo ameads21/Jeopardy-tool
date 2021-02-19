@@ -1,30 +1,57 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Routes from "./Routes";
 import Nav from "./components/Nav";
 import Api from "./Api";
 import useLocalStorage from "./hooks/useLocalStorage";
+import jwt from "jsonwebtoken";
+import LoadingSpinner from "./helpers/LoadingSpinner";
+import UserInfoContext from "./context/UserInfoContext";
+import AuthContext from "./context/UserInfoContext";
+import { useHistory } from "react-router-dom";
+import AuthProvider from "./context/AuthProvider";
 
 export const TOKEN_STORAGE_ID = "authorization";
 
 function App() {
   const [token, setToken] = useLocalStorage(TOKEN_STORAGE_ID);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [infoLoaded, setInfoLoaded] = useState(false);
+  const history = useHistory();
 
-  async function login(loginData) {
-    try {
-      let token = await Api.login(loginData);
-      setToken(token);
-      return { success: true };
-    } catch (errors) {
-      console.error("login failed", errors);
-      return { success: false, errors };
-    }
-  }
+  useEffect(
+    function loadUserInfo() {
+      async function getCurrentUser() {
+        if (token) {
+          try {
+            let { username } = jwt.decode(token);
+            setCurrentUser(username);
+            Api.token = token;
+          } catch (err) {
+            console.error("Problem loading user", err);
+            setCurrentUser(null);
+          }
+        }
+        setInfoLoaded(true);
+      }
+      setInfoLoaded(false);
+      getCurrentUser();
+    },
+    [token]
+  );
+
+  if (!infoLoaded) return <LoadingSpinner />;
   return (
-    <div className="App">
-      <Nav />
-      <Routes login={login} />
-    </div>
+    <UserInfoContext.Provider
+      value={{ token, setToken, currentUser, setCurrentUser }}
+    >
+      <AuthProvider>
+        <div className="App">
+          <Nav />
+          <Routes />
+        </div>
+      </AuthProvider>
+    </UserInfoContext.Provider>
   );
 }
 

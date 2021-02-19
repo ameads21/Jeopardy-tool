@@ -6,28 +6,33 @@ import Register from "./components/Register Login/Register";
 import Template from "./components/Project/Template";
 import ColBoard from "./components/Project/ColBoard";
 import Project from "./components/Project/Project";
+import UserProjects from "./components/Project/UserProjects";
+import UserRoutes from "./UserRoutes";
 
-function Routes({ login }) {
+function Routes() {
   return (
     <Switch>
       <Route path="/" exact>
         <Home />
       </Route>
       <Route path="/login" exact>
-        <Login login={login} />
+        <Login />
       </Route>
       <Route path="/register" exact>
         <Register />
       </Route>
-      <Route path="/template" exact>
+      <UserRoutes path="/template" exact>
         <Template />
-      </Route>
-      <Route path="/col-display" exact>
+      </UserRoutes>
+      <UserRoutes path="/col-display" exact>
         <ColBoard />
-      </Route>
-      <Route path="/project" exact>
+      </UserRoutes>
+      <UserRoutes path="/project" exact>
         <Project />
-      </Route>
+      </UserRoutes>
+      <UserRoutes path="/projects/:username" exact>
+        <UserProjects />
+      </UserRoutes>
       <Redirect to="/"></Redirect>
     </Switch>
   );

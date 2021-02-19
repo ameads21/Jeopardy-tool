@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Alert from "../../helpers/Alert";
+import AuthContext from "../../context/AuthContext";
 
-function Login({ login }) {
+function Login() {
+  const { login } = useContext(AuthContext);
   const history = useHistory();
   const INITIAL_STATE = { username: "", password: "" };
   const [formData, setFormData] = useState(INITIAL_STATE);
@@ -20,7 +22,7 @@ function Login({ login }) {
     e.preventDefault();
     let results = await login(formData);
     if (results.success) {
-      history.push("/companies");
+      history.push(`/projects/${formData["username"]}`);
     } else {
       setFormErrors(results.errors);
     }

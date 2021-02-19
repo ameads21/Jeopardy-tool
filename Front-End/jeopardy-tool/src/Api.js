@@ -20,12 +20,12 @@ class JeopardyApi {
 
   static async register(data) {
     let res = await this.request(`auth/register`, data, "post");
-    return res.token;
+    return res;
   }
   static async login(data) {
     let res = await this.request(`auth/login`, data, "post");
-    console.log("TEsting32");
-    return res.token;
+    console.log(res);
+    return res;
   }
 }
 
