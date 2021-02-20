@@ -24,8 +24,12 @@ class JeopardyApi {
   }
   static async login(data) {
     let res = await this.request(`auth/login`, data, "post");
-    console.log(res);
     return res;
+  }
+
+  static async getProjects(username) {
+    let res = await this.request(`projects/${username}`, {}, "post");
+    return res.data;
   }
 }
 

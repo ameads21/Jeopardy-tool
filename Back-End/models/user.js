@@ -1,10 +1,6 @@
 const db = require("../db");
 const bcrypt = require("bcrypt");
-const {
-  NotFoundError,
-  BadRequestError,
-  UnauthorizedError,
-} = require("../expressError");
+const { BadRequestError, UnauthorizedError } = require("../expressError");
 
 const { BCRYPT_WORK_FACTOR } = require("../config");
 
@@ -55,6 +51,23 @@ class User {
     const user = result.rows[0];
 
     return user;
+  }
+
+  static async projects(username) {
+    const result = await db.query(
+      `SELECT proj_name, proj_description, projects.id
+        FROM projects LEFT JOIN users on 
+        projects.user_id = users.id
+        where users.username = $1`,
+      [username]
+    );
+
+    const projects = result.rows;
+
+    if (projects) {
+      return projects;
+    }
+    throw new UnauthorizedError("No Projects Were Found!");
   }
 }
 

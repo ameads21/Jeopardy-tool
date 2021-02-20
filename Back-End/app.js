@@ -3,13 +3,15 @@ const cors = require("cors");
 const app = express();
 
 const authRoutes = require("./routes/authRoutes");
-const homeRoutes = require("./routes/homeRoutes");
+const projRoutes = require("./routes/projectRoutes");
+const { authenticateJWT } = require("./middleware/auth");
 
 app.use(cors());
+app.use(authenticateJWT);
 app.use(express.json());
 
 app.use("/auth", authRoutes);
-app.use("/", homeRoutes);
+app.use("/projects", projRoutes);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
