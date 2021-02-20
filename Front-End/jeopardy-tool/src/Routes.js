@@ -22,7 +22,10 @@ function Routes() {
       <Route path="/register" exact>
         <Register />
       </Route>
-      <UserRoutes path="/template" exact>
+      <UserRoutes path="/:username/project/0" exact>
+        <StartProjectForm />
+      </UserRoutes>
+      <UserRoutes path="/:username/project/:proj_id" exact>
         <Template />
       </UserRoutes>
       <UserRoutes path="/col-display" exact>
@@ -31,12 +34,10 @@ function Routes() {
       <UserRoutes path="/project" exact>
         <Project />
       </UserRoutes>
-      <UserRoutes path="/projects/:username" exact>
+      <UserRoutes path="/:username/projects" exact>
         <UserProjects />
       </UserRoutes>
-      <UserRoutes path="/projects/:username/0" exact>
-        <StartProjectForm />
-      </UserRoutes>
+
       <Redirect to="/"></Redirect>
     </Switch>
   );

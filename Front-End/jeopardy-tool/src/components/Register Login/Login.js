@@ -22,7 +22,7 @@ function Login() {
     e.preventDefault();
     let results = await login(formData);
     if (results.success) {
-      history.push(`/projects/${formData["username"]}`);
+      history.push(`/${formData["username"]}/projects`);
     } else {
       setFormErrors(results.errors);
     }

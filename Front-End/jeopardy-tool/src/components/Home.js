@@ -5,7 +5,7 @@ import UserInfoContext from "../context/UserInfoContext";
 function Home() {
   const { currentUser } = useContext(UserInfoContext);
 
-  if (currentUser) return <Redirect to={`/projects/${currentUser.username}`} />;
+  if (currentUser) return <Redirect to={`/${currentUser.username}/projects`} />;
   return (
     <div>
       <h1>Welcome to Jeopardy Tool!</h1>

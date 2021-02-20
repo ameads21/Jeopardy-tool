@@ -23,6 +23,17 @@ function UserProjects() {
     getProjects();
   }, [currentUser]);
 
+  function deleteProject(id) {
+    try {
+      Api.deleteProject({ currentUser, id });
+      const newProjects = totalProjects.filter((p) => p.id !== id);
+      setTotalProjects(newProjects);
+    } catch (errors) {
+      console.error("login failed", errors);
+      return { success: false, errors };
+    }
+  }
+
   return (
     <div className="container-fluid">
       <h1>My Projects</h1>
@@ -43,6 +54,7 @@ function UserProjects() {
               name={p.proj_name}
               description={p.proj_description}
               id={p.id}
+              deleteProject={deleteProject}
             />
           ))
         )}

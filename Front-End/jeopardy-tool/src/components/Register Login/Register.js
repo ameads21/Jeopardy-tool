@@ -22,7 +22,7 @@ function Register() {
     e.preventDefault();
     let results = await register(formData);
     if (results.success) {
-      history.push(`/projects/${formData["username"]}`);
+      history.push(`/${formData["username"]}/projects`);
     } else {
       setFormErrors(results.errors);
     }

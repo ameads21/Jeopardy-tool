@@ -38,9 +38,18 @@ class JeopardyApi {
 
   static async sendProjectDetails(data, userdetails) {
     let res = await this.request(
-      `projects/${userdetails.username}/projectDetails`,
+      `projects/${userdetails.username}/projectCreate`,
       data,
       "post"
+    );
+    return res.data.results;
+  }
+
+  static async deleteProject({ id, currentUser }) {
+    let res = await this.request(
+      `projects/${currentUser.username}/project/${id}`,
+      {},
+      "delete"
     );
     console.log(res);
   }

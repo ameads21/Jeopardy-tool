@@ -69,13 +69,26 @@ class User {
     throw new UnauthorizedError("No Projects Were Found!");
   }
 
-  static async saveProject(username, proj_name, proj_description, user_id) {
+  static async saveProject(proj_name, proj_description, user_id) {
     console.log(proj_name, proj_description, user_id);
     const result = await db.query(
       `insert into projects (user_id, proj_name, proj_description) 
-      values ($1, $2, $3)`,
+      values ($1, $2, $3) returning id`,
       [user_id, proj_name, proj_description]
     );
+
+    const projects = result.rows[0];
+
+    if (projects) {
+      return projects;
+    }
+    throw new UnauthorizedError("No Projects Were Found!");
+  }
+
+  static async deleteProject({ proj_id }) {
+    const result = await db.query(`DELETE FROM projects WHERE id = $1`, [
+      proj_id,
+    ]);
 
     const projects = result.rows;
 

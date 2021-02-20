@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import Api from "../../../Api";
 import UserInfoContext from "../../../context/UserInfoContext";
 
@@ -6,6 +7,7 @@ function StartProjectForm() {
   const INITIAL_STATE = { proj_name: "", proj_description: "" };
   const [formData, setFormData] = useState(INITIAL_STATE);
   const { currentUser } = useContext(UserInfoContext);
+  const history = useHistory();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,9 +19,14 @@ function StartProjectForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    let data = { formData, currentUser };
-    await Api.sendProjectDetails(data, currentUser);
-    console.log(formData);
+    try {
+      let data = { formData, currentUser };
+      let { id } = await Api.sendProjectDetails(data, currentUser);
+      history.push(`/${currentUser.username}/project/${id}`);
+    } catch (errors) {
+      console.error("login failed", errors);
+      return { success: false, errors };
+    }
   }
 
   return (
