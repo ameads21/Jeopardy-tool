@@ -15,4 +15,22 @@ router.post("/:username", ensureCorrectUser, async function (req, res, next) {
   }
 });
 
+//Saving Project Name And Description
+router.post(
+  "/:username/projectDetails",
+  ensureCorrectUser,
+  async function (req, res, next) {
+    let { proj_name, proj_description } = req.body.formData;
+    let { id } = req.body.currentUser;
+    console.log("******************************");
+    const results = await User.saveProject(
+      req.params.username,
+      proj_name,
+      proj_description,
+      id
+    );
+    return res.json({ results });
+  }
+);
+
 module.exports = router;

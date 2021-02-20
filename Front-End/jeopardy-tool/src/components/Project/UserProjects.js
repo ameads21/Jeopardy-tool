@@ -11,7 +11,7 @@ function UserProjects() {
   const history = useHistory();
   const [totalProjects, setTotalProjects] = useState([]);
   const [loadedData, setLoadedData] = useState(false);
-  if (username !== currentUser) {
+  if (username !== currentUser.username) {
     history.push("/");
   }
   useEffect(() => {

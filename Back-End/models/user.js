@@ -7,13 +7,12 @@ const { BCRYPT_WORK_FACTOR } = require("../config");
 class User {
   static async authenticate(username, password) {
     const result = await db.query(
-      `SELECT username, password
+      `SELECT username, password, id
         FROM users WHERE username = $1`,
       [username]
     );
 
     const user = result.rows[0];
-
     if (user) {
       const isValid = await bcrypt.compare(password, user.password);
       if (isValid === true) {
@@ -26,7 +25,7 @@ class User {
 
   static async register({ username, password, email }) {
     const duplicateCheck = await db.query(
-      `SELECT username
+      `SELECT username, id
          FROM users
          WHERE username = $1`,
       [username]
@@ -44,7 +43,7 @@ class User {
           password,
           email)
          VALUES ($1, $2, $3)
-         RETURNING username, email`,
+         RETURNING username, email, id`,
       [username, hashedPassword, email]
     );
 
@@ -60,6 +59,22 @@ class User {
         projects.user_id = users.id
         where users.username = $1`,
       [username]
+    );
+
+    const projects = result.rows;
+
+    if (projects) {
+      return projects;
+    }
+    throw new UnauthorizedError("No Projects Were Found!");
+  }
+
+  static async saveProject(username, proj_name, proj_description, user_id) {
+    console.log(proj_name, proj_description, user_id);
+    const result = await db.query(
+      `insert into projects (user_id, proj_name, proj_description) 
+      values ($1, $2, $3)`,
+      [user_id, proj_name, proj_description]
     );
 
     const projects = result.rows;

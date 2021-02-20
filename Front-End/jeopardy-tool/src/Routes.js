@@ -8,6 +8,7 @@ import ColBoard from "./components/Project/ColBoard";
 import Project from "./components/Project/Project";
 import UserProjects from "./components/Project/UserProjects";
 import UserRoutes from "./UserRoutes";
+import StartProjectForm from "./components/Project/New Project/StartProjectForm";
 
 function Routes() {
   return (
@@ -32,6 +33,9 @@ function Routes() {
       </UserRoutes>
       <UserRoutes path="/projects/:username" exact>
         <UserProjects />
+      </UserRoutes>
+      <UserRoutes path="/projects/:username/0" exact>
+        <StartProjectForm />
       </UserRoutes>
       <Redirect to="/"></Redirect>
     </Switch>

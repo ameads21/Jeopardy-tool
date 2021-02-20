@@ -19,10 +19,10 @@ router.post("/login", async function (req, res, next) {
       const errs = validator.errors.map((e) => e.stack);
       throw new BadRequestError(errs);
     }
-    const { username, password } = req.body;
+    const { username, password, id } = req.body;
     const user = await User.authenticate(username, password);
     const token = createToken(user);
-    return res.json({ token, username });
+    return res.json({ token });
   } catch (err) {
     return next(err);
   }

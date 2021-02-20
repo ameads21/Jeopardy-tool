@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import LoadingSpinner from "./helpers/LoadingSpinner";
 import UserInfoContext from "./context/UserInfoContext";
 import AuthProvider from "./context/AuthProvider";
+import ProjectProvider from "./context/ProjectProvider";
 
 export const TOKEN_STORAGE_ID = "authorization";
 
@@ -21,8 +22,8 @@ function App() {
       async function getCurrentUser() {
         if (token) {
           try {
-            let { username } = jwt.decode(token);
-            setCurrentUser(username);
+            let { username, id } = jwt.decode(token);
+            setCurrentUser({ id, username });
             Api.token = token;
           } catch (err) {
             console.error("Problem loading user", err);
@@ -43,10 +44,12 @@ function App() {
       value={{ token, setToken, currentUser, setCurrentUser }}
     >
       <AuthProvider>
-        <div className="App">
-          <Nav />
-          <Routes />
-        </div>
+        <ProjectProvider>
+          <div className="App">
+            <Nav />
+            <Routes />
+          </div>
+        </ProjectProvider>
       </AuthProvider>
     </UserInfoContext.Provider>
   );
