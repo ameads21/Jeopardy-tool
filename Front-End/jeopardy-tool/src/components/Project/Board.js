@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ProjectContext from "../../context/ProjectContext";
 
 function Board() {
   const dispatch = useDispatch();
 
-  let { numCol, numQues, edit } = useSelector(
-    (state) => state.columnAndQuestion
-  );
+  let { numQues, edit } = useSelector((state) => state.columnAndQuestion);
+  const { columnCount } = useContext(ProjectContext);
 
   let editColumn = (key) => {
     if (edit) {
@@ -16,7 +16,7 @@ function Board() {
 
   let renderCol = () => {
     let results = [];
-    let tempCol = numCol;
+    let tempCol = columnCount;
     while (tempCol > 0) {
       tempCol -= 1;
       results.unshift(
@@ -49,7 +49,7 @@ function Board() {
 
   let renderQues = (val) => {
     let questions = [];
-    let tempCol = numCol;
+    let tempCol = columnCount;
     while (tempCol > 0) {
       questions.unshift(
         <td key={`Category ${tempCol}`}>

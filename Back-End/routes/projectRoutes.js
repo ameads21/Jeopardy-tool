@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const express = require("express");
 const { ensureCorrectUser } = require("../middleware/auth");
+const { user } = require("../db");
 
 const router = express.Router();
 
@@ -38,6 +39,37 @@ router.delete(
     try {
       let { proj_id } = req.params;
       const results = await User.deleteProject({ proj_id });
+      return res.json({ results });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+//Saving Columns
+router.post(
+  "/:username/project/:proj_id/columns",
+  ensureCorrectUser,
+  async function (req, res, next) {
+    try {
+      let { columnData } = req.body;
+      let { proj_id } = req.params;
+      const results = await User.saveColumns({ columnData, proj_id });
+      return res.json({ results });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+//Getting project Columns
+router.get(
+  "/:username/project/:proj_id/columns",
+  ensureCorrectUser,
+  async function (req, res, next) {
+    try {
+      let { proj_id } = req.params;
+      const results = await User.getColumns({ proj_id });
       return res.json({ results });
     } catch (err) {
       return next(err);

@@ -53,6 +53,23 @@ class JeopardyApi {
     );
     console.log(res);
   }
+
+  static async saveColumns({ proj_id, currentUser, columnData }) {
+    let res = await this.request(
+      `projects/${currentUser.username}/project/${proj_id}/columns`,
+      { columnData },
+      "post"
+    );
+    return res;
+  }
+
+  static async getColumns({ proj_id, currentUser }) {
+    let res = await this.request(
+      `projects/${currentUser.username}/project/${proj_id}/columns`,
+      {}
+    );
+    return res;
+  }
 }
 
 export default JeopardyApi;

@@ -31,8 +31,8 @@ CREATE TABLE Projects (
 CREATE TABLE Columns (
     id SERIAL  NOT NULL,
     column_id int   NOT NULL,
+    column_name TEXT,
     project_id int   NOT NULL,
-    style_id int   NOT NULL,
     CONSTRAINT pk_Columns PRIMARY KEY (
         id
      )
@@ -81,32 +81,32 @@ CREATE TABLE QuesAndAnswers (
 );
 
 ALTER TABLE Projects ADD CONSTRAINT fk_Projects_user_id FOREIGN KEY(user_id)
-REFERENCES Users (id);
+REFERENCES Users (id) ON DELETE CASCADE;
 
 ALTER TABLE Columns ADD CONSTRAINT fk_Columns_project_id FOREIGN KEY(project_id)
-REFERENCES Projects (id);
+REFERENCES Projects (id) ON DELETE CASCADE;
 
 ALTER TABLE Columns ADD CONSTRAINT fk_Columns_style_id FOREIGN KEY(style_id)
-REFERENCES Styles (id);
+REFERENCES Styles (id) ON DELETE CASCADE;
 
 ALTER TABLE Styles ADD CONSTRAINT fk_Styles_column_id FOREIGN KEY(column_id)
-REFERENCES Columns (column_id);
+REFERENCES Columns (column_id) ON DELETE CASCADE;
 
 ALTER TABLE Styles ADD CONSTRAINT fk_Styles_button_id FOREIGN KEY(button_id)
-REFERENCES Buttons (id);
+REFERENCES Buttons (id) ON DELETE CASCADE;
 
 ALTER TABLE Styles ADD CONSTRAINT fk_Styles_text_id FOREIGN KEY(text_id)
-REFERENCES Text (id);
+REFERENCES Text (id) ON DELETE CASCADE;
 
 ALTER TABLE Styles ADD CONSTRAINT fk_Styles_quesAndAnswer_id FOREIGN KEY(quesAndAnswer_id)
-REFERENCES QuesAndAnswers (id);
+REFERENCES QuesAndAnswers (id) ON DELETE CASCADE;
 
 ALTER TABLE Buttons ADD CONSTRAINT fk_Buttons_style_id FOREIGN KEY(style_id)
-REFERENCES Styles (id);
+REFERENCES Styles (id) ON DELETE CASCADE;
 
 ALTER TABLE Text ADD CONSTRAINT fk_Text_style_id FOREIGN KEY(style_id)
-REFERENCES Styles (id);
+REFERENCES Styles (id) ON DELETE CASCADE;
 
 ALTER TABLE QuesAndAnswers ADD CONSTRAINT fk_QuesAndAnswers_style_id FOREIGN KEY(style_id)
-REFERENCES Styles (id);
+REFERENCES Styles (id) ON DELETE CASCADE;
 

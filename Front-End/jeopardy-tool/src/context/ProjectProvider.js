@@ -1,10 +1,12 @@
 import Api from "../Api";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import UserInfoContext from "./UserInfoContext";
 import ProjectContext from "./ProjectContext";
 
 const ProjectProvider = ({ children }) => {
   const { currentUser } = useContext(UserInfoContext);
+  const [columnCount, setColumnCount] = useState(5);
+  const [questionCount, setQuestionCount] = useState(5);
   async function sendProjectDetails(projectDetails) {
     try {
       await Api.sendProjectDetails(projectDetails, currentUser);
@@ -15,8 +17,24 @@ const ProjectProvider = ({ children }) => {
     }
   }
 
+  function updateColumnCount(num) {
+    setColumnCount(num);
+  }
+
+  function updateQuestionCount(num) {
+    setQuestionCount(num);
+  }
+
   return (
-    <ProjectContext.Provider value={{ sendProjectDetails }}>
+    <ProjectContext.Provider
+      value={{
+        sendProjectDetails,
+        columnCount,
+        questionCount,
+        updateColumnCount,
+        updateQuestionCount,
+      }}
+    >
       {children}
     </ProjectContext.Provider>
   );

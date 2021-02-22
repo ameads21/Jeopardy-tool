@@ -28,10 +28,10 @@ function Routes() {
       <UserRoutes path="/:username/project/:proj_id" exact>
         <Template />
       </UserRoutes>
-      <UserRoutes path="/col-display" exact>
+      <UserRoutes path="/:username/project/:proj_id/col-display" exact>
         <ColBoard />
       </UserRoutes>
-      <UserRoutes path="/project" exact>
+      <UserRoutes path="/:username/project/:proj_id/project" exact>
         <Project />
       </UserRoutes>
       <UserRoutes path="/:username/projects" exact>

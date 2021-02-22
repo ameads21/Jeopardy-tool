@@ -97,6 +97,30 @@ class User {
     }
     throw new UnauthorizedError("No Projects Were Found!");
   }
+
+  static async saveColumns({ columnData }) {
+    const result = await db.query(
+      `INSERT INTO columns (column_id, column_name, project_id)
+    values ${columnData}`
+    );
+    const projects = result.rows;
+    if (projects) {
+      return projects;
+    }
+    throw new UnauthorizedError("No Projects Were Found!");
+  }
+
+  static async getColumns({ proj_id }) {
+    const result = await db.query(
+      `SELECT * FROM columns WHERE project_id = $1`,
+      [proj_id]
+    );
+    const columns = result.rows;
+    if (columns) {
+      return columns.length;
+    }
+    return null;
+  }
 }
 
 module.exports = User;

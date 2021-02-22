@@ -1,19 +1,26 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import UserInfoContext from "../../context/UserInfoContext";
+import Api from "../../Api";
+import ProjectContext from "../../context/ProjectContext";
 
 function ColForm() {
   const history = useHistory();
-  const { numCol, numQues } = useSelector((store) => store.columnAndQuestion);
+  const { numQues } = useSelector((store) => store.columnAndQuestion);
+  const { currentUser } = useContext(UserInfoContext);
+  const { updateColumnCount, columnCount } = useContext(ProjectContext);
+  const { proj_id } = useParams();
   const dispatch = useDispatch();
+
   const incrementCol = () => {
-    if (numCol < 5) {
-      dispatch({ type: "INCREMENTCOL" });
+    if (columnCount < 5) {
+      updateColumnCount(columnCount + 1);
     }
   };
   const decrementCol = () => {
-    if (numCol > 1) {
-      dispatch({ type: "DECREMENTCOL" });
+    if (columnCount > 1) {
+      updateColumnCount(columnCount - 1);
     }
   };
 
@@ -28,11 +35,26 @@ function ColForm() {
     }
   };
 
-  const handleSubmit = (evt) => {
+  async function handleSubmit(evt) {
     evt.preventDefault();
-    dispatch({ type: "EDITACCESS" });
-    history.push("/project");
-  };
+    let columnData = columnAssist();
+    try {
+      await Api.saveColumns({ currentUser, proj_id, columnData });
+      dispatch({ type: "EDITACCESS" });
+      history.push(`/${currentUser.username}/project/${proj_id}/project`);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function columnAssist() {
+    let data = [];
+    for (let i = 0; i < columnCount; i++) {
+      let res = `(${i + 1}, 'Column ${i + 1}', ${proj_id})`;
+      data.push(res);
+    }
+    return data.toString();
+  }
 
   return (
     <div className="container">
@@ -42,7 +64,7 @@ function ColForm() {
           <button onClick={decrementCol} className="btn btn-danger">
             -
           </button>
-          <h3 className="ml-3 mr-3 d-inline text-center">{numCol}</h3>
+          <h3 className="ml-3 mr-3 d-inline text-center">{columnCount}</h3>
           <button onClick={incrementCol} className="btn btn-success">
             +
           </button>
