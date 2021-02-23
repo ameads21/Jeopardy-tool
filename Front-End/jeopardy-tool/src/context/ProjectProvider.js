@@ -28,6 +28,11 @@ const ProjectProvider = ({ children }) => {
     setQuestionCount(num);
   }
 
+  async function updateColumnNames({ proj_id }) {
+    let { results } = await Api.getColumns({ proj_id, currentUser });
+    setColumnNames(results.columnName);
+  }
+
   async function getColumnData({ proj_id }) {
     try {
       let { results } = await Api.getColumns({ proj_id, currentUser });
@@ -56,6 +61,7 @@ const ProjectProvider = ({ children }) => {
         updateColumnCount,
         updateQuestionCount,
         getColumnData,
+        updateColumnNames,
         isLoaded,
         columnNames,
       }}

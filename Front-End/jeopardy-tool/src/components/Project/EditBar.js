@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ColorStyles from "./Editing Components/ColorStyles";
 import BtnPadding from "./Editing Components/BtnPadding";
@@ -6,6 +6,7 @@ import "./Styling/Board.css";
 import Api from "../../Api";
 import { useParams } from "react-router-dom";
 import UserInfoContext from "../../context/UserInfoContext";
+import ProjectContext from "../../context/ProjectContext";
 
 function EditBar() {
   const BTN_INITAL_STATE = {
@@ -24,6 +25,7 @@ function EditBar() {
   const { proj_id } = useParams();
   const { colEditName } = useSelector((state) => state.columnAndQuestion);
   const { currentUser } = useContext(UserInfoContext);
+  const { updateColumnNames } = useContext(ProjectContext);
   const colors = [
     "primary",
     "secondary",
@@ -82,6 +84,7 @@ function EditBar() {
       id: colEditName.split("-")[1],
     };
     await Api.saveCategoryName({ proj_id, currentUser, data });
+    updateColumnNames({ proj_id });
   }
 
   function exitEdit() {
