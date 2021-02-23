@@ -7,7 +7,7 @@ import LoadingSpinner from "../../helpers/LoadingSpinner";
 
 function Template() {
   const { currentUser } = useContext(UserInfoContext);
-  const { updateColumnCount } = useContext(ProjectContext);
+  const { updateColumnCount, updateQuestionCount } = useContext(ProjectContext);
   const [infoLoaded, setInfoLoaded] = useState(false);
   const [columnData, setColumnData] = useState({});
   const { proj_id } = useParams();
@@ -16,10 +16,18 @@ function Template() {
     function loadColumnData() {
       async function getColumnData() {
         try {
-          let { data } = await Api.getColumns({ proj_id, currentUser });
-          setColumnData(data);
+          let { results } = await Api.getColumns({ proj_id, currentUser });
+          let { columnLength, questionLength } = results;
+          console.log(results);
+          setColumnData(results);
           setInfoLoaded(true);
-          data.results ? updateColumnCount(data.results) : updateColumnCount(5);
+          if (results) {
+            updateColumnCount(columnLength);
+            updateQuestionCount(questionLength);
+          } else {
+            updateColumnCount(5);
+            updateQuestionCount(5);
+          }
         } catch (err) {
           console.error(
             "Problem Loading Columns. Please Try Again Later.",
@@ -29,12 +37,13 @@ function Template() {
       }
       getColumnData();
     },
-    [proj_id, currentUser, updateColumnCount]
+    [proj_id, currentUser, updateColumnCount, updateQuestionCount]
   );
   if (!infoLoaded) {
     return <LoadingSpinner />;
   } else {
-    if (columnData.results > 0) {
+    console.log(columnData);
+    if (columnData.columnLength > 0) {
       return (
         <Redirect to={`/${currentUser.username}/project/${proj_id}/project`} />
       );

@@ -9,7 +9,12 @@ function ColForm() {
   const history = useHistory();
   const { numQues } = useSelector((store) => store.columnAndQuestion);
   const { currentUser } = useContext(UserInfoContext);
-  const { updateColumnCount, columnCount } = useContext(ProjectContext);
+  const {
+    updateColumnCount,
+    columnCount,
+    questionCount,
+    updateQuestionCount,
+  } = useContext(ProjectContext);
   const { proj_id } = useParams();
   const dispatch = useDispatch();
 
@@ -25,21 +30,23 @@ function ColForm() {
   };
 
   const incrementQues = () => {
-    if (numQues < 5) {
-      dispatch({ type: "INCREMENTQUES" });
+    if (questionCount < 5) {
+      updateQuestionCount(questionCount + 1);
     }
   };
   const decrementQues = () => {
-    if (numQues > 1) {
-      dispatch({ type: "DECREMENTQUES" });
+    if (questionCount > 1) {
+      updateQuestionCount(questionCount - 1);
     }
   };
 
   async function handleSubmit(evt) {
     evt.preventDefault();
-    let columnData = columnAssist();
+    const data = { columns: columnAssist(), questionCount };
+    console.log("Data questioncount");
+    console.log(data.questionCount);
     try {
-      await Api.saveColumns({ currentUser, proj_id, columnData });
+      await Api.saveColumns({ currentUser, proj_id, data });
       dispatch({ type: "EDITACCESS" });
       history.push(`/${currentUser.username}/project/${proj_id}/project`);
     } catch (err) {
@@ -74,7 +81,7 @@ function ColForm() {
           <button onClick={decrementQues} className="btn btn-danger">
             -
           </button>
-          <h3 className="ml-3 mr-3 d-inline text-center">{numQues}</h3>
+          <h3 className="ml-3 mr-3 d-inline text-center">{questionCount}</h3>
           <button onClick={incrementQues} className="btn btn-success">
             +
           </button>

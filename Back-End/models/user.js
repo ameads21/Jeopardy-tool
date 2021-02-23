@@ -98,28 +98,41 @@ class User {
     throw new UnauthorizedError("No Projects Were Found!");
   }
 
-  static async saveColumns({ columnData }) {
+  static async saveColumns({ data, proj_id }) {
+    const { columns, questionCount } = data;
+    console.log(data);
     const result = await db.query(
       `INSERT INTO columns (column_id, column_name, project_id)
-    values ${columnData}`
+    values ${columns};`
     );
+    await db.query(`UPDATE projects SET num_answers = $1 where id = $2`, [
+      questionCount,
+      proj_id,
+    ]);
+
     const projects = result.rows;
     if (projects) {
       return projects;
     }
-    throw new UnauthorizedError("No Projects Were Found!");
+    throw new UnauthorizedError("Hmm, that wasn't supposed to happen.");
   }
 
   static async getColumns({ proj_id }) {
     const result = await db.query(
-      `SELECT * FROM columns WHERE project_id = $1`,
+      `select projects.id, projects.num_answers, column_name from columns
+       inner join projects on columns.project_id=projects.id where projects.id = $1`,
       [proj_id]
     );
     const columns = result.rows;
-    if (columns) {
-      return columns.length;
+    if (columns.length) {
+      const data = {
+        columnLength: columns.length,
+        questionLength: columns[0].num_answers,
+      };
+
+      return data;
     }
-    return null;
+    return 0;
   }
 }
 

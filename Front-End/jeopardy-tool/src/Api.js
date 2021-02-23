@@ -54,10 +54,10 @@ class JeopardyApi {
     console.log(res);
   }
 
-  static async saveColumns({ proj_id, currentUser, columnData }) {
+  static async saveColumns({ proj_id, currentUser, data }) {
     let res = await this.request(
       `projects/${currentUser.username}/project/${proj_id}/columns`,
-      { columnData },
+      { data },
       "post"
     );
     return res;
@@ -68,7 +68,7 @@ class JeopardyApi {
       `projects/${currentUser.username}/project/${proj_id}/columns`,
       {}
     );
-    return res;
+    return res.data;
   }
 }
 

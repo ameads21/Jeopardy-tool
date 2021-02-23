@@ -23,6 +23,7 @@ CREATE TABLE Projects (
     user_id int   NOT NULL,
     proj_name TEXT   NOT NULL,
     proj_description TEXT   NOT NULL,
+    num_answers int DEFAULT 5,
     CONSTRAINT pk_Projects PRIMARY KEY (
         id
      )

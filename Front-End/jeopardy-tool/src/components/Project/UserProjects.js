@@ -16,9 +16,13 @@ function UserProjects() {
   }
   useEffect(() => {
     async function getProjects() {
-      let { projects } = await Api.getProjects(currentUser);
-      setTotalProjects(projects);
-      setLoadedData(true);
+      try {
+        let { projects } = await Api.getProjects(currentUser);
+        setTotalProjects(projects);
+        setLoadedData(true);
+      } catch (err) {
+        console.error(err);
+      }
     }
     getProjects();
   }, [currentUser]);

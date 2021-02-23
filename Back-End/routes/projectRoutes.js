@@ -52,9 +52,11 @@ router.post(
   ensureCorrectUser,
   async function (req, res, next) {
     try {
-      let { columnData } = req.body;
+      let { data } = req.body;
       let { proj_id } = req.params;
-      const results = await User.saveColumns({ columnData, proj_id });
+      console.log("************");
+      console.log(data);
+      const results = await User.saveColumns({ data, proj_id });
       return res.json({ results });
     } catch (err) {
       return next(err);

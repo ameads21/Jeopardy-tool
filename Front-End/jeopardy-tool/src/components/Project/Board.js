@@ -5,8 +5,8 @@ import ProjectContext from "../../context/ProjectContext";
 function Board() {
   const dispatch = useDispatch();
 
-  let { numQues, edit } = useSelector((state) => state.columnAndQuestion);
-  const { columnCount } = useContext(ProjectContext);
+  let { edit } = useSelector((state) => state.columnAndQuestion);
+  const { columnCount, questionCount } = useContext(ProjectContext);
 
   let editColumn = (key) => {
     if (edit) {
@@ -35,7 +35,7 @@ function Board() {
 
   let renderQuesRows = () => {
     let rows = [];
-    let tempQues = numQues;
+    let tempQues = questionCount;
     let values = 100;
     let rowNum = 1;
     while (tempQues > 0) {
