@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, Redirect, useParams } from "react-router-dom";
 import Api from "../../Api";
 import ProjectContext from "../../context/ProjectContext";
@@ -11,6 +12,7 @@ function Template() {
   const [infoLoaded, setInfoLoaded] = useState(false);
   const [columnData, setColumnData] = useState({});
   const { proj_id } = useParams();
+  const dispatch = useDispatch();
 
   useEffect(
     function loadColumnData() {
@@ -44,6 +46,7 @@ function Template() {
   } else {
     console.log(columnData);
     if (columnData.columnLength > 0) {
+      dispatch({ type: "EDITACCESS" });
       return (
         <Redirect to={`/${currentUser.username}/project/${proj_id}/project`} />
       );

@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ColorStyles from "./Editing Components/ColorStyles";
 import BtnPadding from "./Editing Components/BtnPadding";
 import "./Styling/Board.css";
+import Api from "../../Api";
+import { useParams } from "react-router-dom";
+import UserInfoContext from "../../context/UserInfoContext";
 
 function EditBar() {
   const BTN_INITAL_STATE = {
@@ -13,12 +16,14 @@ function EditBar() {
   const TEXT_INITAL_STATE = {
     TEXTcolor: "",
     TEXTbackground_color: "",
-    TEXTinnerText: "Category Name Here",
+    TEXTinnerText: "",
   };
   const [btnData, setBtnData] = useState(BTN_INITAL_STATE);
   const [textData, setTextData] = useState(TEXT_INITAL_STATE);
   const dispatch = useDispatch();
+  const { proj_id } = useParams();
   const { colEditName } = useSelector((state) => state.columnAndQuestion);
+  const { currentUser } = useContext(UserInfoContext);
   const colors = [
     "primary",
     "secondary",
@@ -67,9 +72,16 @@ function EditBar() {
     }));
   }
 
-  function handleSubmit(evt) {
+  async function handleSubmit(evt) {
     evt.preventDefault();
     console.log(btnData);
+    console.log(textData);
+    console.log(colEditName.split("-")[1]);
+    const data = {
+      title: textData.TEXTinnerText,
+      id: colEditName.split("-")[1],
+    };
+    await Api.saveCategoryName({ proj_id, currentUser, data });
   }
 
   function exitEdit() {
@@ -146,10 +158,10 @@ function EditBar() {
             />
           </div>
         </div>
+        <button type="submit" className="btn btn-primary mt-5 ">
+          Update
+        </button>
       </form>
-      <button type="submit" className="btn btn-primary mt-5 ">
-        Update
-      </button>
     </div>
   );
 }

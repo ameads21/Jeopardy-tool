@@ -80,4 +80,35 @@ router.get(
   }
 );
 
+//Saving Column Name
+router.post(
+  "/:username/project/:proj_id/titleSave",
+  ensureCorrectUser,
+  async function (req, res, next) {
+    try {
+      let { proj_id } = req.params;
+      let { data } = req.body;
+      const results = await User.saveColumnTitle({ proj_id, data });
+      return res.json({ results });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.post(
+  "/:username/project/:proj_id/buttonSave",
+  ensureCorrectUser,
+  async function (req, res, next) {
+    try {
+      let { proj_id } = req.params;
+      let { data } = req.body;
+      const results = await User.saveColumnTitle({ proj_id, data });
+      return res.json({ results });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 module.exports = router;

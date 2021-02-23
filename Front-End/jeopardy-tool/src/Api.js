@@ -70,6 +70,24 @@ class JeopardyApi {
     );
     return res.data;
   }
+
+  static async saveCategoryName({ proj_id, currentUser, data }) {
+    let res = await this.request(
+      `projects/${currentUser.username}/project/${proj_id}/titleSave`,
+      { data },
+      "post"
+    );
+    return res.data;
+  }
+
+  static async saveStyleButtons({ proj_id, currentUser, data }) {
+    let res = await this.request(
+      `projects/${currentUser.username}/project/${proj_id}/buttonSave`,
+      { data },
+      "post"
+    );
+    return res.data;
+  }
 }
 
 export default JeopardyApi;

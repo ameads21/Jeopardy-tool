@@ -8,6 +8,7 @@ const ProjectProvider = ({ children }) => {
   const [columnCount, setColumnCount] = useState(5);
   const [questionCount, setQuestionCount] = useState(5);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [columnNames, setColumnNames] = useState([]);
   async function sendProjectDetails(projectDetails) {
     try {
       await Api.sendProjectDetails(projectDetails, currentUser);
@@ -30,10 +31,11 @@ const ProjectProvider = ({ children }) => {
   async function getColumnData({ proj_id }) {
     try {
       let { results } = await Api.getColumns({ proj_id, currentUser });
-      let { columnLength, questionLength } = results;
+      let { columnLength, questionLength, columnName } = results;
       if (results) {
         setColumnCount(columnLength);
         setQuestionCount(questionLength);
+        setColumnNames(columnName);
         setIsLoaded(true);
       } else {
         setColumnCount(5);
@@ -55,6 +57,7 @@ const ProjectProvider = ({ children }) => {
         updateQuestionCount,
         getColumnData,
         isLoaded,
+        columnNames,
       }}
     >
       {children}

@@ -156,19 +156,43 @@ class User {
   static async getColumns({ proj_id }) {
     const result = await db.query(
       `select projects.id, projects.num_answers, column_name from columns
-       inner join projects on columns.project_id=projects.id where projects.id = $1`,
+       inner join projects on columns.project_id=projects.id where projects.id = $1 order by columns.column_id`,
       [proj_id]
     );
     const columns = result.rows;
+    const names = columns.map((name) => {
+      return name.column_name;
+    });
     if (columns.length) {
       const data = {
         columnLength: columns.length,
         questionLength: columns[0].num_answers,
+        columnName: names,
       };
 
       return data;
     }
     return 0;
+  }
+
+  static async saveColumnTitle({ proj_id, data }) {
+    const { title, id } = data;
+    const result = await db.query(
+      `UPDATE columns SET column_name = $1 where project_id = $2 AND column_id = $3`,
+      [title, proj_id, id]
+    );
+
+    return result.rows;
+  }
+
+  static async saveButtonStyle({ proj_id, data }) {
+    console.log(data);
+    // const result = await db.query(
+    //   `UPDATE columns SET column_name = $1 where project_id = $2 AND column_id = $3`,
+    //   [title, proj_id, id]
+    // );
+
+    // return result.rows;
   }
 }
 

@@ -8,9 +8,13 @@ function Board() {
   const dispatch = useDispatch();
 
   let { edit } = useSelector((state) => state.columnAndQuestion);
-  const { columnCount, questionCount, isLoaded, getColumnData } = useContext(
-    ProjectContext
-  );
+  const {
+    columnCount,
+    questionCount,
+    columnNames,
+    isLoaded,
+    getColumnData,
+  } = useContext(ProjectContext);
   let { proj_id } = useParams();
 
   useEffect(
@@ -18,11 +22,12 @@ function Board() {
       async function loadColumnData() {
         if (!isLoaded) {
           await getColumnData({ proj_id });
+          dispatch({ type: "EDITACCESS" });
         }
       }
       loadColumnData();
     },
-    [getColumnData, proj_id, isLoaded]
+    [getColumnData, proj_id, isLoaded, dispatch]
   );
 
   if (!isLoaded) {
@@ -34,7 +39,6 @@ function Board() {
       dispatch({ type: "CURRENTEDIT", key });
     }
   };
-
   let renderCol = () => {
     let results = [];
     let tempCol = columnCount;
@@ -47,7 +51,9 @@ function Board() {
           className={`category-${tempCol + 1}`}
           onClick={(val) => editColumn(val.target.className.split(" ")[0])}
         >
-          Category {tempCol + 1}
+          {!columnNames || !columnNames[tempCol]
+            ? `Category ${tempCol + 1}`
+            : columnNames[tempCol]}
         </th>
       );
     }
