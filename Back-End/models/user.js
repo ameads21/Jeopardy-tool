@@ -134,6 +134,24 @@ class User {
     }
     return 0;
   }
+
+  static async saveStyles({ proj_id }) {
+    const result = await db.query(
+      `select projects.id, projects.num_answers, column_name from columns
+       inner join projects on columns.project_id=projects.id where projects.id = $1`,
+      [proj_id]
+    );
+    const columns = result.rows;
+    if (columns.length) {
+      const data = {
+        columnLength: columns.length,
+        questionLength: columns[0].num_answers,
+      };
+
+      return data;
+    }
+    return 0;
+  }
 }
 
 module.exports = User;
