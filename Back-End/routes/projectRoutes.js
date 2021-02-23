@@ -57,6 +57,7 @@ router.post(
       console.log("************");
       console.log(data);
       const results = await User.saveColumns({ data, proj_id });
+      await User.createStyles({ proj_id });
       return res.json({ results });
     } catch (err) {
       return next(err);

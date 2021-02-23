@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const { BadRequestError, UnauthorizedError } = require("../expressError");
 
 const { BCRYPT_WORK_FACTOR } = require("../config");
+const { connect } = require("../db");
 
 class User {
   static async authenticate(username, password) {
@@ -100,15 +101,16 @@ class User {
 
   static async saveColumns({ data, proj_id }) {
     const { columns, questionCount } = data;
-    console.log(data);
     const result = await db.query(
       `INSERT INTO columns (column_id, column_name, project_id)
-    values ${columns};`
+    values ${columns} RETURNING id;`
     );
+
     await db.query(`UPDATE projects SET num_answers = $1 where id = $2`, [
       questionCount,
       proj_id,
     ]);
+    console.log(result);
 
     const projects = result.rows;
     if (projects) {
@@ -117,25 +119,41 @@ class User {
     throw new UnauthorizedError("Hmm, that wasn't supposed to happen.");
   }
 
-  static async getColumns({ proj_id }) {
-    const result = await db.query(
-      `select projects.id, projects.num_answers, column_name from columns
-       inner join projects on columns.project_id=projects.id where projects.id = $1`,
+  static async createStyles({ proj_id }) {
+    const column_rows = await db.query(
+      `SELECT id FROM columns where project_id = $1`,
       [proj_id]
     );
-    const columns = result.rows;
-    if (columns.length) {
-      const data = {
-        columnLength: columns.length,
-        questionLength: columns[0].num_answers,
-      };
 
-      return data;
-    }
-    return 0;
+    const column_ids = column_rows.rows.map((id) => {
+      return `(${Object.values(id)})`;
+    });
+    const style_ids = await db.query(
+      `INSERT INTO styles(column_id) VALUES ${column_ids} RETURNING id`
+    );
+
+    const buttonQuery = style_ids.rows.map((id) => {
+      return `(${Object.values(id)}, '', 'btn-secondary')`;
+    });
+    const textQuery = style_ids.rows.map((id) => {
+      return `(${Object.values(id)}, '', '', '')`;
+    });
+    const quesandanswersQuery = style_ids.rows.map((id) => {
+      return `(${Object.values(id)}, '[]', '[]')`;
+    });
+
+    await db.query(
+      `INSERT INTO buttons (style_id, text_color, background_color) values ${buttonQuery}`
+    );
+    await db.query(
+      `INSERT INTO text (style_id, text_input, text_color, background_color) values ${textQuery}`
+    );
+    await db.query(
+      `INSERT INTO quesandanswers (style_id, questions, answers) values ${quesandanswersQuery}`
+    );
   }
 
-  static async saveStyles({ proj_id }) {
+  static async getColumns({ proj_id }) {
     const result = await db.query(
       `select projects.id, projects.num_answers, column_name from columns
        inner join projects on columns.project_id=projects.id where projects.id = $1`,
