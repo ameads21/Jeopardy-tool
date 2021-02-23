@@ -1,13 +1,12 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import UserInfoContext from "../../context/UserInfoContext";
 import Api from "../../Api";
 import ProjectContext from "../../context/ProjectContext";
 
 function ColForm() {
   const history = useHistory();
-  const { numQues } = useSelector((store) => store.columnAndQuestion);
   const { currentUser } = useContext(UserInfoContext);
   const {
     updateColumnCount,

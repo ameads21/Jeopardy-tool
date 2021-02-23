@@ -7,9 +7,11 @@ const ProjectProvider = ({ children }) => {
   const { currentUser } = useContext(UserInfoContext);
   const [columnCount, setColumnCount] = useState(5);
   const [questionCount, setQuestionCount] = useState(5);
+  const [isLoaded, setIsLoaded] = useState(false);
   async function sendProjectDetails(projectDetails) {
     try {
       await Api.sendProjectDetails(projectDetails, currentUser);
+      setIsLoaded(true);
       return { success: true };
     } catch (errors) {
       console.error("Failed saving project", errors);
@@ -25,6 +27,24 @@ const ProjectProvider = ({ children }) => {
     setQuestionCount(num);
   }
 
+  async function getColumnData({ proj_id }) {
+    try {
+      let { results } = await Api.getColumns({ proj_id, currentUser });
+      let { columnLength, questionLength } = results;
+      if (results) {
+        setColumnCount(columnLength);
+        setQuestionCount(questionLength);
+        setIsLoaded(true);
+      } else {
+        setColumnCount(5);
+        setQuestionCount(5);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    setIsLoaded(true);
+  }
+
   return (
     <ProjectContext.Provider
       value={{
@@ -33,6 +53,8 @@ const ProjectProvider = ({ children }) => {
         questionCount,
         updateColumnCount,
         updateQuestionCount,
+        getColumnData,
+        isLoaded,
       }}
     >
       {children}

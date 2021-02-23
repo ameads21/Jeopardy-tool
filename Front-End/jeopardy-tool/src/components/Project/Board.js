@@ -1,12 +1,33 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import ProjectContext from "../../context/ProjectContext";
+import LoadingSpinner from "../../helpers/LoadingSpinner";
 
 function Board() {
   const dispatch = useDispatch();
 
   let { edit } = useSelector((state) => state.columnAndQuestion);
-  const { columnCount, questionCount } = useContext(ProjectContext);
+  const { columnCount, questionCount, isLoaded, getColumnData } = useContext(
+    ProjectContext
+  );
+  let { proj_id } = useParams();
+
+  useEffect(
+    function gettingData() {
+      async function loadColumnData() {
+        if (!isLoaded) {
+          await getColumnData({ proj_id });
+        }
+      }
+      loadColumnData();
+    },
+    [getColumnData, proj_id, isLoaded]
+  );
+
+  if (!isLoaded) {
+    return <LoadingSpinner />;
+  }
 
   let editColumn = (key) => {
     if (edit) {
