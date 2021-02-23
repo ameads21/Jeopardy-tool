@@ -80,10 +80,10 @@ class JeopardyApi {
     return res.data;
   }
 
-  static async saveStyleButtons({ proj_id, currentUser, data }) {
+  static async saveStyleButtons({ proj_id, currentUser, styleData }) {
     let res = await this.request(
-      `projects/${currentUser.username}/project/${proj_id}/buttonSave`,
-      { data },
+      `projects/${currentUser.username}/project/${proj_id}/styleSave`,
+      { styleData },
       "post"
     );
     return res.data;

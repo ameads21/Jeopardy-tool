@@ -83,8 +83,18 @@ function EditBar() {
       title: textData.TEXTinnerText,
       id: colEditName.split("-")[1],
     };
+    const styleData = {
+      btnData,
+      textData,
+      id: colEditName.split("-")[1],
+    };
     await Api.saveCategoryName({ proj_id, currentUser, data });
     updateColumnNames({ proj_id });
+    await Api.saveStyleButtons({
+      proj_id,
+      currentUser,
+      styleData,
+    });
   }
 
   function exitEdit() {
@@ -109,7 +119,7 @@ function EditBar() {
             <ColorStyles
               handleChange={handleChangeBtn}
               element="BTN"
-              styleName="background-color"
+              styleName="background_color"
               values="bg"
               colors={colors}
             />
@@ -118,7 +128,7 @@ function EditBar() {
             <ColorStyles
               handleChange={handleChangeBtn}
               element="BTN"
-              styleName="text-color"
+              styleName="text_color"
               values="text"
               colors={colors}
             />
@@ -145,7 +155,7 @@ function EditBar() {
             <ColorStyles
               handleChange={handleChangeText}
               element="TEXT"
-              styleName="background-color"
+              styleName="background_color"
               values="bg"
               colors={colors}
             />
@@ -155,7 +165,7 @@ function EditBar() {
             <ColorStyles
               handleChange={handleChangeText}
               element="TEXT"
-              styleName="text-color"
+              styleName="text_color"
               values="text"
               colors={colors}
             />

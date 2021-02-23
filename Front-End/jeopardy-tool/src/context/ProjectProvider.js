@@ -9,6 +9,7 @@ const ProjectProvider = ({ children }) => {
   const [questionCount, setQuestionCount] = useState(5);
   const [isLoaded, setIsLoaded] = useState(false);
   const [columnNames, setColumnNames] = useState([]);
+  const [styleData, setStyleData] = useState({});
   async function sendProjectDetails(projectDetails) {
     try {
       await Api.sendProjectDetails(projectDetails, currentUser);

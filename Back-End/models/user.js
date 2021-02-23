@@ -126,10 +126,10 @@ class User {
     );
 
     const column_ids = column_rows.rows.map((id) => {
-      return `(${Object.values(id)})`;
+      return `(${Object.values(id)}, ${proj_id})`;
     });
     const style_ids = await db.query(
-      `INSERT INTO styles(column_id) VALUES ${column_ids} RETURNING id`
+      `INSERT INTO styles(column_id, project_id) VALUES ${column_ids} RETURNING id`
     );
 
     const buttonQuery = style_ids.rows.map((id) => {
@@ -185,14 +185,42 @@ class User {
     return result.rows;
   }
 
-  static async saveButtonStyle({ proj_id, data }) {
-    console.log(data);
-    // const result = await db.query(
-    //   `UPDATE columns SET column_name = $1 where project_id = $2 AND column_id = $3`,
-    //   [title, proj_id, id]
-    // );
+  static async saveStyles({ proj_id, styleData }) {
+    const { btnData, textData, id } = styleData;
+    const style_id = await db.query(
+      `select styles.id from styles inner join columns on columns.id = styles.column_id where
+      columns.column_id = $1 and styles.project_id = $2`,
+      [id, proj_id]
+    );
+    function clean(obj) {
+      for (let prop in obj) {
+        if (obj[prop] === null || obj[prop] === undefined || obj[prop] === "") {
+          delete obj[prop];
+        }
+      }
+      return Object.entries(obj).map(([key, value]) => {
+        if (key.includes("BTN")) {
+          return `${key.replace("BTN", "")} = '${value}'`;
+        } else {
+          return `${key.replace("TEXT", "")} = '${value}'`;
+        }
+      });
+    }
 
-    // return result.rows;
+    const btnStyles = clean(btnData);
+    const textStyles = clean(textData);
+
+    const btnResults = await db.query(
+      `UPDATE buttons SET ${btnStyles.toString()} where style_id = $1`,
+      [style_id.rows[0].id]
+    );
+
+    const textResults = await db.query(
+      `UPDATE text SET ${textStyles.toString()} where style_id = $1`,
+      [style_id.rows[0].id]
+    );
+
+    return { success: true };
   }
 }
 

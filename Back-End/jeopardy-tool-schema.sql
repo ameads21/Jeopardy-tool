@@ -42,6 +42,7 @@ CREATE TABLE Columns (
 CREATE TABLE Styles (
     id SERIAL  NOT NULL,
     column_id int   NOT NULL,
+    project_id int NOT NULL,
     CONSTRAINT pk_Styles PRIMARY KEY (
         id
      )
@@ -84,8 +85,8 @@ REFERENCES Users (id) ON DELETE CASCADE;
 ALTER TABLE Columns ADD CONSTRAINT fk_Columns_project_id FOREIGN KEY(project_id)
 REFERENCES Projects (id) ON DELETE CASCADE;
 
-ALTER TABLE Styles ADD CONSTRAINT fk_Styles_column_id FOREIGN KEY(column_id)
-REFERENCES Columns (column_id) ON DELETE CASCADE;
+ALTER TABLE Styles ADD CONSTRAINT fk_Styles_column_id FOREIGN KEY(project_id)
+REFERENCES Projects (id) ON DELETE CASCADE;
 
 ALTER TABLE Buttons ADD CONSTRAINT fk_Buttons_style_id FOREIGN KEY(style_id)
 REFERENCES Styles (id) ON DELETE CASCADE;
