@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ColorStyles from "./Editing Components/ColorStyles";
 import BtnPadding from "./Editing Components/BtnPadding";
@@ -10,9 +10,9 @@ import ProjectContext from "../../context/ProjectContext";
 
 function EditBar() {
   const BTN_INITAL_STATE = {
-    BTNcolor: "",
-    BTNbackground_color: "",
-    BTNpadding: "",
+    BTNcolor: null,
+    BTNbackground_color: null,
+    BTNpadding: null,
   };
   const TEXT_INITAL_STATE = {
     TEXTcolor: "",
@@ -39,8 +39,8 @@ function EditBar() {
 
   function handleChangeBtn(evt) {
     const { name, value } = evt.target;
-
-    let categoryButtons = document.querySelectorAll(`.btn.${colEditName}`);
+    console.log("Testing Button");
+    let categoryButtons = document.querySelectorAll(`button.${colEditName}`);
     for (let c of categoryButtons) {
       if (c.classList.contains(btnData[name])) {
         c.classList.remove(btnData[name]);
@@ -55,6 +55,7 @@ function EditBar() {
   }
 
   function handleChangeText(evt) {
+    console.log("Testing Text");
     const { name, value } = evt.target;
     let category = document.querySelectorAll(`th.${colEditName}`);
     for (let c of category) {
@@ -76,9 +77,6 @@ function EditBar() {
 
   async function handleSubmit(evt) {
     evt.preventDefault();
-    console.log(btnData);
-    console.log(textData);
-    console.log(colEditName.split("-")[1]);
     const data = {
       title: textData.TEXTinnerText,
       id: colEditName.split("-")[1],
@@ -120,7 +118,7 @@ function EditBar() {
               handleChange={handleChangeBtn}
               element="BTN"
               styleName="background_color"
-              values="bg"
+              values="btn"
               colors={colors}
             />
           </div>

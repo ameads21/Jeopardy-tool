@@ -29,6 +29,11 @@ const ProjectProvider = ({ children }) => {
     setQuestionCount(num);
   }
 
+  function exitProject() {
+    setStyleData({});
+    setIsLoaded(false);
+  }
+
   async function updateColumnNames({ proj_id }) {
     let { results } = await Api.getColumns({ proj_id, currentUser });
     setColumnNames(results.columnName);
@@ -37,13 +42,15 @@ const ProjectProvider = ({ children }) => {
   async function getColumnData({ proj_id }) {
     try {
       let { results } = await Api.getColumns({ proj_id, currentUser });
-      let { columnLength, questionLength, columnName } = results;
+      let { columnLength, questionLength, columnName, columnStyles } = results;
       if (results) {
         setColumnCount(columnLength);
         setQuestionCount(questionLength);
         setColumnNames(columnName);
+        setStyleData(columnStyles);
         setIsLoaded(true);
       } else {
+        setStyleData({});
         setColumnCount(5);
         setQuestionCount(5);
       }
@@ -63,8 +70,10 @@ const ProjectProvider = ({ children }) => {
         updateQuestionCount,
         getColumnData,
         updateColumnNames,
+        exitProject,
         isLoaded,
         columnNames,
+        styleData,
       }}
     >
       {children}

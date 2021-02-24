@@ -4,10 +4,12 @@ import UserInfoContext from "../../context/UserInfoContext";
 import LoadingSpinner from "../../helpers/LoadingSpinner";
 import Api from "../../Api";
 import ProjectCard from "./ProjectCard";
+import ProjectContext from "../../context/ProjectContext";
 
 function UserProjects() {
   const { username } = useParams();
   const { currentUser } = useContext(UserInfoContext);
+  let { exitProject, isLoaded } = useContext(ProjectContext);
   const history = useHistory();
   const [totalProjects, setTotalProjects] = useState([]);
   const [loadedData, setLoadedData] = useState(false);
@@ -20,12 +22,15 @@ function UserProjects() {
         let { projects } = await Api.getProjects(currentUser);
         setTotalProjects(projects);
         setLoadedData(true);
+        if (isLoaded) {
+          await exitProject();
+        }
       } catch (err) {
         console.error(err);
       }
     }
     getProjects();
-  }, [currentUser]);
+  }, [currentUser, exitProject, isLoaded]);
 
   function deleteProject(id) {
     try {
@@ -47,7 +52,7 @@ function UserProjects() {
           name="New Project"
           description="Creation for a new project"
           btnText="Create"
-          id="0"
+          id="new-project/0"
         />
         {!loadedData ? (
           <LoadingSpinner />

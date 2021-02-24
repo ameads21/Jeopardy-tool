@@ -4,6 +4,7 @@ const { BadRequestError, UnauthorizedError } = require("../expressError");
 
 const { BCRYPT_WORK_FACTOR } = require("../config");
 const { connect } = require("../db");
+const { text } = require("express");
 
 class User {
   static async authenticate(username, password) {
@@ -71,7 +72,6 @@ class User {
   }
 
   static async saveProject(proj_name, proj_description, user_id) {
-    console.log(proj_name, proj_description, user_id);
     const result = await db.query(
       `insert into projects (user_id, proj_name, proj_description) 
       values ($1, $2, $3) returning id`,
@@ -110,7 +110,6 @@ class User {
       questionCount,
       proj_id,
     ]);
-    console.log(result);
 
     const projects = result.rows;
     if (projects) {
@@ -133,21 +132,17 @@ class User {
     );
 
     const buttonQuery = style_ids.rows.map((id) => {
-      return `(${Object.values(id)}, '', 'btn-secondary')`;
+      return `(${Object.values(id)})`;
     });
     const textQuery = style_ids.rows.map((id) => {
-      return `(${Object.values(id)}, '', '', '')`;
+      return `(${Object.values(id)})`;
     });
     const quesandanswersQuery = style_ids.rows.map((id) => {
       return `(${Object.values(id)}, '[]', '[]')`;
     });
 
-    await db.query(
-      `INSERT INTO buttons (style_id, text_color, background_color) values ${buttonQuery}`
-    );
-    await db.query(
-      `INSERT INTO text (style_id, text_input, text_color, background_color) values ${textQuery}`
-    );
+    await db.query(`INSERT INTO buttons (style_id) values ${buttonQuery}`);
+    await db.query(`INSERT INTO text (style_id) values ${textQuery}`);
     await db.query(
       `INSERT INTO quesandanswers (style_id, questions, answers) values ${quesandanswersQuery}`
     );
@@ -155,19 +150,52 @@ class User {
 
   static async getColumns({ proj_id }) {
     const result = await db.query(
-      `select projects.id, projects.num_answers, column_name from columns
-       inner join projects on columns.project_id=projects.id where projects.id = $1 order by columns.column_id`,
+      `select projects.num_answers, columns.column_id, columns.column_name, buttons.text_color as button_text_color, buttons.background_color as button_background_color,
+      text.text_color as text_text_color, text.background_color as text_background_color
+      from projects inner join columns on columns.project_id = projects.id inner join styles on styles.column_id = columns.id inner join buttons on styles.id = buttons.style_id inner join
+      text on styles.id = text.style_id where styles.project_id = $1 order by columns.column_id `,
       [proj_id]
     );
+
     const columns = result.rows;
     const names = columns.map((name) => {
       return name.column_name;
     });
+
+    function clean(obj) {
+      const styles = { buttons: [], text: [] };
+      for (let prop in obj) {
+        if (
+          obj[prop] === null ||
+          obj[prop] === undefined ||
+          obj[prop] === "" ||
+          obj.TEXTinnerText
+        ) {
+          delete obj[prop];
+        }
+      }
+      Object.entries(obj).map(([key, value]) => {
+        if (key.includes("button_")) {
+          styles.buttons.push(value);
+        } else {
+          styles.text.push(value);
+        }
+      });
+      return styles;
+    }
+
+    const styles = columns.map(
+      ({ num_answers, column_id, column_name, ...style }) => {
+        return clean(style);
+      }
+    );
+
     if (columns.length) {
       const data = {
         columnLength: columns.length,
         questionLength: columns[0].num_answers,
         columnName: names,
+        columnStyles: styles,
       };
 
       return data;
@@ -187,6 +215,7 @@ class User {
 
   static async saveStyles({ proj_id, styleData }) {
     const { btnData, textData, id } = styleData;
+
     const style_id = await db.query(
       `select styles.id from styles inner join columns on columns.id = styles.column_id where
       columns.column_id = $1 and styles.project_id = $2`,
@@ -194,7 +223,12 @@ class User {
     );
     function clean(obj) {
       for (let prop in obj) {
-        if (obj[prop] === null || obj[prop] === undefined || obj[prop] === "") {
+        if (
+          obj[prop] === null ||
+          obj[prop] === undefined ||
+          obj[prop] === "" ||
+          obj.TEXTinnerText
+        ) {
           delete obj[prop];
         }
       }
@@ -210,15 +244,19 @@ class User {
     const btnStyles = clean(btnData);
     const textStyles = clean(textData);
 
-    const btnResults = await db.query(
-      `UPDATE buttons SET ${btnStyles.toString()} where style_id = $1`,
-      [style_id.rows[0].id]
-    );
+    if (btnStyles.length > 0) {
+      const btnResults = await db.query(
+        `UPDATE buttons SET ${btnStyles.toString()} where style_id = $1`,
+        [style_id.rows[0].id]
+      );
+    }
 
-    const textResults = await db.query(
-      `UPDATE text SET ${textStyles.toString()} where style_id = $1`,
-      [style_id.rows[0].id]
-    );
+    if (textStyles.length > 0) {
+      const textResults = await db.query(
+        `UPDATE text SET ${textStyles.toString()} where style_id = $1`,
+        [style_id.rows[0].id]
+      );
+    }
 
     return { success: true };
   }

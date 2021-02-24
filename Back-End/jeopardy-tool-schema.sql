@@ -51,8 +51,9 @@ CREATE TABLE Styles (
 CREATE TABLE Buttons (
     id SERIAL  NOT NULL,
     style_id int   NOT NULL,
-    text_color TEXT   NOT NULL,
-    background_color TEXT   NOT NULL,
+    text_color TEXT   DEFAULT 'text-light',
+    background_color TEXT  DEFAULT 'btn-secondary',
+    padding TEXT DEFAULT 'p-3'
     CONSTRAINT pk_Buttons PRIMARY KEY (
         id
      )
@@ -61,9 +62,8 @@ CREATE TABLE Buttons (
 CREATE TABLE Text (
     id SERIAL  NOT NULL,
     style_id int   NOT NULL,
-    text_input TEXT   NOT NULL,
-    text_color TEXT   NOT NULL,
-    background_color TEXT   NOT NULL,
+    text_color TEXT   DEFAULT 'text-dark',
+    background_color TEXT   DEFAULT 'bg-light',
     CONSTRAINT pk_Text PRIMARY KEY (
         id
      )

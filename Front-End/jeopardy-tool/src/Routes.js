@@ -26,7 +26,10 @@ function Routes() {
       </Route>
       {currentUser && (
         <>
-          <UserRoutes path={`/${currentUser.username}/project/0`} exact>
+          <UserRoutes
+            path={`/${currentUser.username}/project/new-project/0`}
+            exact
+          >
             <StartProjectForm />
           </UserRoutes>
           <UserRoutes path={`/${currentUser.username}/project/:proj_id`} exact>

@@ -14,6 +14,7 @@ function Board() {
     columnNames,
     isLoaded,
     getColumnData,
+    styleData,
   } = useContext(ProjectContext);
   let { proj_id } = useParams();
 
@@ -30,10 +31,6 @@ function Board() {
     [getColumnData, proj_id, isLoaded, dispatch]
   );
 
-  if (!isLoaded) {
-    return <LoadingSpinner />;
-  }
-
   let editColumn = (key) => {
     if (edit) {
       dispatch({ type: "CURRENTEDIT", key });
@@ -42,13 +39,20 @@ function Board() {
   let renderCol = () => {
     let results = [];
     let tempCol = columnCount;
+
     while (tempCol > 0) {
       tempCol -= 1;
       results.unshift(
         <th
           key={`category-${tempCol}`}
           scope="col"
-          className={`category-${tempCol + 1}`}
+          className={
+            Object.entries(styleData).length === 0
+              ? `category-${tempCol + 1}`
+              : `category-${tempCol + 1} ${styleData[tempCol].text
+                  .toString()
+                  .replace(/,/g, " ")}`
+          }
           onClick={(val) => editColumn(val.target.className.split(" ")[0])}
         >
           {!columnNames || !columnNames[tempCol]
@@ -81,7 +85,13 @@ function Board() {
       questions.unshift(
         <td key={`Category ${tempCol}`}>
           <button
-            className={`category-${tempCol} btn btn-secondary p-3`}
+            className={
+              Object.entries(styleData).length === 0
+                ? `category-${tempCol} btn btn-secondary p-3`
+                : `category-${tempCol} btn ${styleData[tempCol - 1].buttons
+                    .toString()
+                    .replace(/,/g, " ")}`
+            }
             onClick={(val) => editColumn(val.target.className.split(" ")[0])}
           >
             {val}
@@ -93,6 +103,9 @@ function Board() {
     return questions;
   };
 
+  if (!isLoaded) {
+    return <LoadingSpinner />;
+  }
   return (
     <div>
       <table className="table">
