@@ -88,6 +88,14 @@ class JeopardyApi {
     );
     return res.data;
   }
+
+  static async getQuesandAnswers({ proj_id, currentUser, column_id }) {
+    let res = await this.request(
+      `projects/${currentUser.username}/project/${proj_id}/${column_id}/getQuesandAnswers`,
+      { column_id }
+    );
+    return res.data;
+  }
 }
 
 export default JeopardyApi;

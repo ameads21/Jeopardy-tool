@@ -49,6 +49,7 @@ const ProjectProvider = ({ children }) => {
   function exitProject() {
     setStyleData({});
     setIsLoaded(false);
+    setColumnNames([]);
     dispatch({ type: "CURRENTEDIT", key: "category-0" });
   }
 
@@ -80,7 +81,6 @@ const ProjectProvider = ({ children }) => {
 
   function handleChangeBtn(evt) {
     const { name, value } = evt.target;
-    //Getting the first part of value
     const valueCheck = `${value.split("-")[0]}-`;
     let categoryButtons = document.querySelectorAll(`button.${colEditName}`);
     for (let c of categoryButtons) {
@@ -119,8 +119,44 @@ const ProjectProvider = ({ children }) => {
     }));
   }
 
-  async function exitEdit() {
+  async function exitEdit({ proj_id }) {
+    const data = {
+      title: textData.TEXTinnerText,
+      id: colEditName.split("-")[1],
+    };
+    const styleData = {
+      btnData,
+      textData,
+      id: colEditName.split("-")[1],
+    };
+    await Api.saveCategoryName({ proj_id, currentUser, data });
+    await Api.saveStyleButtons({
+      proj_id,
+      currentUser,
+      styleData,
+    });
     dispatch({ type: "CURRENTEDIT", key: "category-0" });
+    setBtnData(BTN_INITAL_STATE);
+    setTextData(TEXT_INITAL_STATE);
+  }
+
+  async function updateEdit({ key, proj_id }) {
+    const data = {
+      title: textData.TEXTinnerText,
+      id: colEditName.split("-")[1],
+    };
+    const styleData = {
+      btnData,
+      textData,
+      id: colEditName.split("-")[1],
+    };
+    await Api.saveCategoryName({ proj_id, currentUser, data });
+    await Api.saveStyleButtons({
+      proj_id,
+      currentUser,
+      styleData,
+    });
+    dispatch({ type: "CURRENTEDIT", key });
     setBtnData(BTN_INITAL_STATE);
     setTextData(TEXT_INITAL_STATE);
   }
@@ -139,6 +175,7 @@ const ProjectProvider = ({ children }) => {
         handleChangeBtn,
         handleChangeText,
         exitEdit,
+        updateEdit,
         isLoaded,
         columnNames,
         styleData,

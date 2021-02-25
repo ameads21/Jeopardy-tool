@@ -3,89 +3,64 @@ import React from "react";
 function BtnPadding({ handleChange }) {
   return (
     <div>
-      <div className="custom-control mx-auto custom-radio custom-control-inline">
-        <input
-          className="custom-conrol-inputs d-none"
-          name="BTNpadding"
-          type="radio"
-          onChange={handleChange}
-          value="p-1"
-          id="BTNpadding_1"
-        />
-        <label
-          htmlFor="BTNpadding_1"
-          className="form-check-label btn btn-primary p-1"
+      <div className="custom-control custom-radio custom-control-inline mx-auto">
+        <button
+          className={`btn btn-primary p-1`}
+          name={`BTNpadding`}
+          onClick={handleChange}
+          value={`p-1`}
+          id={`BTNpadding_1`}
         >
-          Padding
-        </label>
+          Padding 1
+        </button>
       </div>
 
-      <div className="custom-control mx-auto custom-radio custom-control-inline">
-        <input
-          className="custom-conrol-inputs d-none"
-          name="BTNpadding"
-          type="radio"
-          onChange={handleChange}
-          value="p-2"
-          id="BTNpadding_2"
-        />
-        <label
-          htmlFor="BTNpadding_2"
-          className="form-check-label btn btn-primary p-2"
+      <div className="custom-control custom-radio custom-control-inline mx-auto">
+        <button
+          className={`btn btn-primary p-2`}
+          name={`BTNpadding`}
+          onClick={handleChange}
+          value={`p-2`}
+          id={`BTNpadding_2`}
         >
-          Padding
-        </label>
+          Padding 2
+        </button>
       </div>
 
-      <div className="custom-control mx-auto custom-radio custom-control-inline">
-        <input
-          className="custom-conrol-inputs d-none"
-          name="BTNpadding"
-          type="radio"
-          onChange={handleChange}
-          value="p-3"
-          id="BTNpadding_3"
-        />
-        <label
-          htmlFor="BTNpadding_3"
-          className="form-check-label btn btn-primary p-3"
+      <div className="custom-control custom-radio custom-control-inline mx-auto">
+        <button
+          className={`btn btn-primary p-3`}
+          name={`BTNpadding`}
+          onClick={handleChange}
+          value={`p-3`}
+          id={`BTNpadding_3`}
         >
-          Padding
-        </label>
+          Padding 3
+        </button>
       </div>
 
-      <div className="custom-control mx-auto custom-radio custom-control-inline">
-        <input
-          className="custom-conrol-inputs d-none"
-          name="BTNpadding"
-          type="radio"
-          onChange={handleChange}
-          value="p-4"
-          id="BTNpadding_4"
-        />
-        <label
-          htmlFor="BTNpadding_4"
-          className="form-check-label btn btn-primary p-4"
+      <div className="custom-control custom-radio custom-control-inline mx-auto">
+        <button
+          className={`btn btn-primary p-4`}
+          name={`BTNpadding`}
+          onClick={handleChange}
+          value={`p-4`}
+          id={`BTNpadding_4`}
         >
-          Padding
-        </label>
+          Padding 4
+        </button>
       </div>
 
-      <div className="custom-control mx-auto custom-radio custom-control-inline">
-        <input
-          className="custom-conrol-inputs d-none"
-          name="BTNpadding"
-          type="radio"
-          onChange={handleChange}
-          value="p-5"
-          id="BTNpadding_5"
-        />
-        <label
-          htmlFor="BTNpadding_5"
-          className="form-check-label btn btn-primary p-5"
+      <div className="custom-control custom-radio custom-control-inline mx-auto">
+        <button
+          className={`btn btn-primary p-5`}
+          name={`BTNpadding`}
+          onClick={handleChange}
+          value={`p-5`}
+          id={`BTNpadding_5`}
         >
-          Padding
-        </label>
+          Padding 5
+        </button>
       </div>
     </div>
   );

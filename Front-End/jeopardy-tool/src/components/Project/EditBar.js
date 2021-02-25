@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ColorStyles from "./Editing Components/ColorStyles";
 import BtnPadding from "./Editing Components/BtnPadding";
 import "./Styling/Board.css";
@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import UserInfoContext from "../../context/UserInfoContext";
 import ProjectContext from "../../context/ProjectContext";
 import LoadingSpinner from "../../helpers/LoadingSpinner";
+import QuesAnswersForm from "./Editing Components/QuesAnswersForm";
 
 function EditBar() {
   const {
@@ -60,7 +61,10 @@ function EditBar() {
 
   return (
     <div>
-      <button className="float-right mt-3 mr-4" onClick={exitEdit}>
+      <button
+        className="float-right mt-3 mr-4"
+        onClick={() => exitEdit({ proj_id })}
+      >
         X
       </button>
       <h1>
@@ -128,10 +132,14 @@ function EditBar() {
             />
           </div>
         </div>
-        <button type="submit" className="btn btn-primary mt-5 ">
-          Update
-        </button>
+        <div className="col-12">
+          <hr></hr>
+          <QuesAnswersForm column_id={colEditName.match(/\d+/)[0]} />
+        </div>
       </form>
+      <button className="btn btn-success" onClick={() => exitEdit({ proj_id })}>
+        Update
+      </button>
     </div>
   );
 }

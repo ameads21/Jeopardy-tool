@@ -11,24 +11,19 @@ function Background({ handleChange, element, styleName, values, colors }) {
       {colors.map((c) => (
         <div
           className="custom-control custom-radio custom-control-inline mx-auto"
-          data-toggle="buttons"
           key={`${element}${styleName}-${c}`}
         >
-          <input
-            className="custom-conrol-inputs d-none"
+          <button
+            className={`btn border rounded ${values}-${c}`}
             name={`${element}${styleName}`}
-            type="radio"
-            onChange={handleChange}
+            type="button"
+            onClick={handleChange}
             value={`${values}-${c}`}
             id={`${element}${styleName}-${c}`}
-          />
-          <label
-            htmlFor={`${element}${styleName}-${c}`}
-            className={`btn border rounded ${values}-${c}`}
           >
             {styleName.charAt(0).toUpperCase() +
               styleName.slice(1).replace("-", " ")}
-          </label>
+          </button>
         </div>
       ))}
     </div>

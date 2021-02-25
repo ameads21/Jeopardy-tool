@@ -110,4 +110,19 @@ router.post(
   }
 );
 
+//Getting Questions and Answers
+router.get(
+  "/:username/project/:proj_id/:column_id/getQuesandAnswers",
+  ensureCorrectUser,
+  async function (req, res, next) {
+    try {
+      let { proj_id, column_id } = req.params;
+      const results = await User.getQuesandAnswers({ proj_id, column_id });
+      return res.json({ results });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 module.exports = router;

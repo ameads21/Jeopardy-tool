@@ -261,6 +261,24 @@ class User {
 
     return { success: true };
   }
+
+  static async getQuesandAnswers({ proj_id, column_id }) {
+    const style_id = await db.query(
+      `select styles.id from styles inner join columns on columns.id = styles.column_id where
+      columns.column_id = $1 and styles.project_id = $2`,
+      [column_id, proj_id]
+    );
+
+    const quesandanswers = await db.query(
+      `select questions, answers from quesandanswers where style_id = $1`,
+      [style_id.rows[0].id]
+    );
+
+    return {
+      questions: quesandanswers.rows[0].questions,
+      answers: quesandanswers.rows[0].answers,
+    };
+  }
 }
 
 module.exports = User;
