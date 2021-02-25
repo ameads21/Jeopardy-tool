@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Board from "./Board";
 import EditBar from "./EditBar";
@@ -7,13 +7,14 @@ import "./Styling/Board.css";
 
 function ProjectMain() {
   const { colEditName } = useSelector((state) => state.columnAndQuestion);
+
   return (
     <div className="container-fluid project-container">
       <div className="row">
         <div className="col">
           <Board />
         </div>
-        {colEditName !== "None" ? (
+        {colEditName !== "category-0" ? (
           <div className="col-md-5">
             <EditBar />
           </div>

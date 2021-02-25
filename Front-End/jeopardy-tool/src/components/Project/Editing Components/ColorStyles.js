@@ -12,6 +12,7 @@ function Background({ handleChange, element, styleName, values, colors }) {
         <div
           className="custom-control custom-radio custom-control-inline mx-auto"
           data-toggle="buttons"
+          key={`${element}${styleName}-${c}`}
         >
           <input
             className="custom-conrol-inputs d-none"

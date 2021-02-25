@@ -16,21 +16,25 @@ function UserProjects() {
   if (username !== currentUser.username) {
     history.push("/");
   }
-  useEffect(() => {
-    async function getProjects() {
-      try {
-        let { projects } = await Api.getProjects(currentUser);
-        setTotalProjects(projects);
-        setLoadedData(true);
-        if (isLoaded) {
-          await exitProject();
+  useEffect(
+    function loadProjects() {
+      async function getProjects() {
+        try {
+          let { projects } = await Api.getProjects(currentUser);
+          setTotalProjects(projects);
+          setLoadedData(true);
+          if (isLoaded) {
+            await exitProject();
+          }
+        } catch (err) {
+          console.error(err);
         }
-      } catch (err) {
-        console.error(err);
       }
-    }
-    getProjects();
-  }, [currentUser, exitProject, isLoaded]);
+      getProjects();
+    },
+
+    [currentUser, exitProject, isLoaded]
+  );
 
   function deleteProject(id) {
     try {

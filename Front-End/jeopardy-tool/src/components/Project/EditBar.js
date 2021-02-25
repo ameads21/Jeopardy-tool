@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ColorStyles from "./Editing Components/ColorStyles";
 import BtnPadding from "./Editing Components/BtnPadding";
@@ -7,25 +7,22 @@ import Api from "../../Api";
 import { useParams } from "react-router-dom";
 import UserInfoContext from "../../context/UserInfoContext";
 import ProjectContext from "../../context/ProjectContext";
+import LoadingSpinner from "../../helpers/LoadingSpinner";
 
 function EditBar() {
-  const BTN_INITAL_STATE = {
-    BTNcolor: null,
-    BTNbackground_color: null,
-    BTNpadding: null,
-  };
-  const TEXT_INITAL_STATE = {
-    TEXTcolor: "",
-    TEXTbackground_color: "",
-    TEXTinnerText: "",
-  };
-  const [btnData, setBtnData] = useState(BTN_INITAL_STATE);
-  const [textData, setTextData] = useState(TEXT_INITAL_STATE);
-  const dispatch = useDispatch();
-  const { proj_id } = useParams();
+  const {
+    isLoaded,
+    updateColumnNames,
+    btnData,
+    textData,
+    handleChangeBtn,
+    handleChangeText,
+    exitEdit,
+  } = useContext(ProjectContext);
   const { colEditName } = useSelector((state) => state.columnAndQuestion);
+
+  const { proj_id } = useParams();
   const { currentUser } = useContext(UserInfoContext);
-  const { updateColumnNames } = useContext(ProjectContext);
   const colors = [
     "primary",
     "secondary",
@@ -36,44 +33,6 @@ function EditBar() {
     "light",
     "dark",
   ];
-
-  function handleChangeBtn(evt) {
-    const { name, value } = evt.target;
-    console.log("Testing Button");
-    let categoryButtons = document.querySelectorAll(`button.${colEditName}`);
-    for (let c of categoryButtons) {
-      if (c.classList.contains(btnData[name])) {
-        c.classList.remove(btnData[name]);
-      }
-      c.classList.add(value);
-    }
-
-    setBtnData((data) => ({
-      ...data,
-      [name]: value,
-    }));
-  }
-
-  function handleChangeText(evt) {
-    console.log("Testing Text");
-    const { name, value } = evt.target;
-    let category = document.querySelectorAll(`th.${colEditName}`);
-    for (let c of category) {
-      if (name === "TEXTinnerText") {
-        c.innerText = value;
-      } else {
-        if (c.classList.contains(textData[name])) {
-          c.classList.remove(textData[name]);
-        }
-        c.classList.add(value);
-      }
-    }
-
-    setTextData((data) => ({
-      ...data,
-      [name]: value,
-    }));
-  }
 
   async function handleSubmit(evt) {
     evt.preventDefault();
@@ -86,6 +45,8 @@ function EditBar() {
       textData,
       id: colEditName.split("-")[1],
     };
+    console.log(styleData);
+    console.log(data);
     await Api.saveCategoryName({ proj_id, currentUser, data });
     updateColumnNames({ proj_id });
     await Api.saveStyleButtons({
@@ -95,9 +56,7 @@ function EditBar() {
     });
   }
 
-  function exitEdit() {
-    dispatch({ type: "CURRENTEDIT", key: "None" });
-  }
+  if (!isLoaded) return <LoadingSpinner />;
 
   return (
     <div>

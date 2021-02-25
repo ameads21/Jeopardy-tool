@@ -53,7 +53,7 @@ CREATE TABLE Buttons (
     style_id int   NOT NULL,
     text_color TEXT   DEFAULT 'text-light',
     background_color TEXT  DEFAULT 'btn-secondary',
-    padding TEXT DEFAULT 'p-3'
+    padding TEXT DEFAULT 'p-3',
     CONSTRAINT pk_Buttons PRIMARY KEY (
         id
      )

@@ -151,6 +151,7 @@ class User {
   static async getColumns({ proj_id }) {
     const result = await db.query(
       `select projects.num_answers, columns.column_id, columns.column_name, buttons.text_color as button_text_color, buttons.background_color as button_background_color,
+      buttons.padding as button_padding,
       text.text_color as text_text_color, text.background_color as text_background_color
       from projects inner join columns on columns.project_id = projects.id inner join styles on styles.column_id = columns.id inner join buttons on styles.id = buttons.style_id inner join
       text on styles.id = text.style_id where styles.project_id = $1 order by columns.column_id `,

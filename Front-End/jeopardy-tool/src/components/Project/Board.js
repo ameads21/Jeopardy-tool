@@ -7,7 +7,7 @@ import LoadingSpinner from "../../helpers/LoadingSpinner";
 function Board() {
   const dispatch = useDispatch();
 
-  let { edit } = useSelector((state) => state.columnAndQuestion);
+  let { edit, colEditName } = useSelector((state) => state.columnAndQuestion);
   const {
     columnCount,
     questionCount,
@@ -15,6 +15,7 @@ function Board() {
     isLoaded,
     getColumnData,
     styleData,
+    updateEdit,
   } = useContext(ProjectContext);
   let { proj_id } = useParams();
 
@@ -34,6 +35,7 @@ function Board() {
   let editColumn = (key) => {
     if (edit) {
       dispatch({ type: "CURRENTEDIT", key });
+      console.log(key);
     }
   };
   let renderCol = () => {
