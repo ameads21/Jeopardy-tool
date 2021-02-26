@@ -98,6 +98,7 @@ class JeopardyApi {
   }
 
   static async saveQuesandAnswers({ proj_id, currentUser, data, column_id }) {
+    console.log(data);
     let res = await this.request(
       `projects/${currentUser.username}/project/${proj_id}/${column_id}/getQuesandAnswers`,
       { data },

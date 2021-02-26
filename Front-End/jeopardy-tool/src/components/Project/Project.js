@@ -19,7 +19,9 @@ function ProjectMain() {
             <EditBar />
           </div>
         ) : (
-          <div></div>
+          <div>
+            <Modal />
+          </div>
         )}
       </div>
     </div>

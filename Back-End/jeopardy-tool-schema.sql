@@ -74,6 +74,7 @@ CREATE TABLE QuesAndAnswers (
     style_id int   NOT NULL,
     questions TEXT   NOT NULL,
     answers TEXT   NOT NULL,
+    filters TEXT NOT NULL,
     CONSTRAINT pk_QuesAndAnswers PRIMARY KEY (
         id
      )

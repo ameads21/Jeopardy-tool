@@ -46,8 +46,6 @@ function EditBar() {
       textData,
       id: colEditName.split("-")[1],
     };
-    console.log(styleData);
-    console.log(data);
     await Api.saveCategoryName({ proj_id, currentUser, data });
     updateColumnNames({ proj_id });
     await Api.saveStyleButtons({

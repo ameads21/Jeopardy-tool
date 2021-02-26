@@ -138,13 +138,13 @@ class User {
       return `(${Object.values(id)})`;
     });
     const quesandanswersQuery = style_ids.rows.map((id) => {
-      return `(${Object.values(id)}, '[]', '[]')`;
+      return `(${Object.values(id)}, '[]', '[]', '[]')`;
     });
 
     await db.query(`INSERT INTO buttons (style_id) values ${buttonQuery}`);
     await db.query(`INSERT INTO text (style_id) values ${textQuery}`);
     await db.query(
-      `INSERT INTO quesandanswers (style_id, questions, answers) values ${quesandanswersQuery}`
+      `INSERT INTO quesandanswers (style_id, questions, answers, filters) values ${quesandanswersQuery}`
     );
   }
 
@@ -270,13 +270,14 @@ class User {
     );
 
     const quesandanswers = await db.query(
-      `select questions, answers from quesandanswers where style_id = $1`,
+      `select questions, answers, filters from quesandanswers where style_id = $1`,
       [style_id.rows[0].id]
     );
 
     return {
       questions: quesandanswers.rows[0].questions,
       answers: quesandanswers.rows[0].answers,
+      filters: quesandanswers.rows[0].filters,
     };
   }
 
@@ -284,15 +285,19 @@ class User {
     const { column_id, dataCopy } = data;
     const questions = [];
     const answers = [];
+    const filters = [];
+
     if (dataCopy.length) {
       dataCopy.map((q) => {
         questions.push(`"${q.question}"`);
         answers.push(`"${q.answer}"`);
+        filters.push(`"[${q.filter.toString()}]"`);
       });
     }
 
     const stringQuestions = `[${questions.toString()}]`;
     const stringAnswers = `[${answers.toString()}]`;
+    const stringFilters = `[${filters.toString()}]`;
 
     const style_id = await db.query(
       `select styles.id from styles inner join columns on columns.id = styles.column_id where
@@ -300,10 +305,9 @@ class User {
       [column_id, proj_id]
     );
 
-    console.log(style_id.rows[0].id);
     await db.query(
-      `UPDATE quesandanswers SET questions = $1, answers = $2 where style_id = $3`,
-      [stringQuestions, stringAnswers, style_id.rows[0].id]
+      `UPDATE quesandanswers SET questions = $1, answers = $2, filters = $3 where style_id = $4`,
+      [stringQuestions, stringAnswers, stringFilters, style_id.rows[0].id]
     );
   }
 }
