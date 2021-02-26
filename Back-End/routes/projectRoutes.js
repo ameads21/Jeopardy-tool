@@ -145,4 +145,18 @@ router.post(
   }
 );
 
+router.get(
+  "/:username/project/:proj_id/startProject",
+  ensureCorrectUser,
+  async function (req, res, next) {
+    try {
+      let { proj_id } = req.params;
+      const results = await User.getProject({ proj_id });
+      return res.json({ results });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 module.exports = router;

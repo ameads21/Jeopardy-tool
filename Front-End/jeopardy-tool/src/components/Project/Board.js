@@ -18,6 +18,7 @@ function Board() {
     getColumnData,
     styleData,
     updateEdit,
+    allQuesData,
   } = useContext(ProjectContext);
   let { proj_id } = useParams();
 
@@ -33,9 +34,15 @@ function Board() {
     [getColumnData, proj_id, isLoaded, dispatch]
   );
 
-  let editColumn = (key) => {
-    edit ? updateEdit({ key, proj_id }) : handleShow();
-  };
+  function editColumn(btn) {
+    const key = btn.target.className.split(" ")[0];
+    if (edit) {
+      updateEdit({ key, proj_id });
+    } else {
+      handleShow();
+      btn.target.disabled = true;
+    }
+  }
   let renderCol = () => {
     let results = [];
     let tempCol = columnCount;
@@ -53,7 +60,7 @@ function Board() {
                   .toString()
                   .replace(/,/g, " ")}`
           }
-          onClick={(val) => editColumn(val.target.className.split(" ")[0])}
+          onClick={editColumn}
         >
           {!columnNames || !columnNames[tempCol]
             ? `Category ${tempCol + 1}`
@@ -92,7 +99,7 @@ function Board() {
                     .toString()
                     .replace(/,/g, " ")}`
             }
-            onClick={(val) => editColumn(val.target.className.split(" ")[0])}
+            onClick={editColumn}
           >
             {val}
           </button>

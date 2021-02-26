@@ -310,6 +310,80 @@ class User {
       [stringQuestions, stringAnswers, stringFilters, style_id.rows[0].id]
     );
   }
+
+  static async getProject({ proj_id }) {
+    const results = await db.query(
+      "select questions, answers, filters from quesandanswers inner join styles on styles.id = quesandanswers.style_id where project_id = $1",
+      [proj_id]
+    );
+
+    let data = [];
+    function clean(results) {
+      if (
+        results.rows[results.rows.length - 1].questions == "[]" ||
+        results.rows[results.rows.length - 1].questions.length === 0
+      ) {
+        results.rows.pop();
+      }
+      if (results.rows.length === 0) {
+        return 0;
+      }
+      const rowLength = results.rows.length - 1;
+      let questions;
+      let answers;
+      let filters;
+      if (typeof results.rows[rowLength].questions === "string") {
+        questions = JSON.parse(results.rows[rowLength].questions);
+        answers = JSON.parse(results.rows[rowLength].answers);
+        filters = JSON.parse(results.rows[rowLength].filters);
+      } else {
+        questions = results.rows[rowLength].questions;
+        answers = results.rows[rowLength].answers;
+        filters = results.rows[rowLength].filters;
+      }
+      if (!data[`Column${rowLength}`]) {
+        data[`Column${rowLength}`] = [];
+      }
+      data[`Column${rowLength}`].push({
+        question: questions.pop(),
+        answer: answers.pop(),
+        filters: filters.pop(),
+      });
+      results.rows[rowLength].questions = questions;
+      results.rows[rowLength].answers = answers;
+      results.rows[rowLength].filters = filters;
+
+      return clean(results);
+    }
+
+    clean(results);
+    console.log(data);
+
+    // if (results.rows[results.rows.length - 1].questions == "[]") {
+    //   const newResults = results.rows.slice();
+    //   newResults.pop();
+    //   console.log("***************8");
+    //   console.log(results.rows);
+    //   console.log(newResults.length);
+    // } else {
+    //   const rowLength = results.rows.length - 1;
+    //   let questions = JSON.parse(results.rows[rowLength].questions);
+    //   let answers = JSON.parse(results.rows[rowLength].answers);
+    //   let filters = JSON.parse(results.rows[rowLength].filters);
+    //   if (!data[`Column${rowLength}`]) {
+    //     data[`Column${rowLength}`] = [];
+    //   }
+    //   data[`Column${rowLength}`].push({
+    //     question: questions.pop(),
+    //     answer: answers.pop(),
+    //     filters: filters.pop(),
+    //   });
+    //   console.log(data);
+    // }
+    // console.log(Object.values(data));
+    // console.log(JSON.stringify(results.rows[0].questions == "[]"));
+    return results.rows;
+  }
 }
 
 module.exports = User;

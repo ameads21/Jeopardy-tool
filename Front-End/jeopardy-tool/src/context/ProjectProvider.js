@@ -25,6 +25,7 @@ const ProjectProvider = ({ children }) => {
   const [styleData, setStyleData] = useState({});
   const [btnData, setBtnData] = useState(BTN_INITAL_STATE);
   const [textData, setTextData] = useState(TEXT_INITAL_STATE);
+  const [allQuesData, setAllQuesData] = useState([]);
   const dispatch = useDispatch();
 
   async function sendProjectDetails(projectDetails) {
@@ -161,6 +162,10 @@ const ProjectProvider = ({ children }) => {
     setTextData(TEXT_INITAL_STATE);
   }
 
+  function startGame(data) {
+    setAllQuesData(data);
+  }
+
   return (
     <ProjectContext.Provider
       value={{
@@ -176,6 +181,8 @@ const ProjectProvider = ({ children }) => {
         handleChangeText,
         exitEdit,
         updateEdit,
+        startGame,
+        allQuesData,
         isLoaded,
         columnNames,
         styleData,

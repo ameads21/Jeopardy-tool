@@ -106,6 +106,14 @@ class JeopardyApi {
     );
     return res.data;
   }
+
+  static async getAllQuesandAnswers({ proj_id, currentUser }) {
+    let res = await this.request(
+      `projects/${currentUser.username}/project/${proj_id}/startProject`,
+      {}
+    );
+    return res.data.results;
+  }
 }
 
 export default JeopardyApi;
