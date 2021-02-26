@@ -8,7 +8,7 @@ const INITAL_STATE = {
 function rootReducer(state = INITAL_STATE, action) {
   switch (action.type) {
     case "EDITACCESS":
-      return { ...state, edit: true };
+      return { ...state, edit: !state.edit };
 
     case "CURRENTEDIT":
       return { ...state, colEditName: action.key };

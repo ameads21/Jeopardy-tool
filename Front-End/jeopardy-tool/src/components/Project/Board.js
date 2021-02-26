@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import ModalContext from "../../context/ModalContext";
 import ProjectContext from "../../context/ProjectContext";
 import LoadingSpinner from "../../helpers/LoadingSpinner";
 
@@ -8,6 +9,7 @@ function Board() {
   const dispatch = useDispatch();
 
   let { edit } = useSelector((state) => state.columnAndQuestion);
+  const { handleShow } = useContext(ModalContext);
   const {
     columnCount,
     questionCount,
@@ -24,7 +26,6 @@ function Board() {
       async function loadColumnData() {
         if (!isLoaded) {
           await getColumnData({ proj_id });
-          dispatch({ type: "EDITACCESS" });
         }
       }
       loadColumnData();
@@ -33,9 +34,7 @@ function Board() {
   );
 
   let editColumn = (key) => {
-    if (edit) {
-      updateEdit({ key, proj_id });
-    }
+    edit ? updateEdit({ key, proj_id }) : handleShow();
   };
   let renderCol = () => {
     let results = [];

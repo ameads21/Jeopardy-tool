@@ -46,7 +46,6 @@ function ColForm() {
     console.log(data.questionCount);
     try {
       await Api.saveColumns({ currentUser, proj_id, data });
-      dispatch({ type: "EDITACCESS" });
       history.push(`/${currentUser.username}/project/${proj_id}/project`);
     } catch (err) {
       console.error(err);

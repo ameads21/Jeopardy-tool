@@ -9,6 +9,7 @@ import LoadingSpinner from "./helpers/LoadingSpinner";
 import UserInfoContext from "./context/UserInfoContext";
 import AuthProvider from "./context/AuthProvider";
 import ProjectProvider from "./context/ProjectProvider";
+import ModalProvider from "./context/ModalProvider";
 
 export const TOKEN_STORAGE_ID = "authorization";
 
@@ -45,10 +46,12 @@ function App() {
     >
       <AuthProvider>
         <ProjectProvider>
-          <div className="App">
-            <Nav />
-            <Routes />
-          </div>
+          <ModalProvider>
+            <div className="App">
+              <Nav />
+              <Routes />
+            </div>
+          </ModalProvider>
         </ProjectProvider>
       </AuthProvider>
     </UserInfoContext.Provider>
