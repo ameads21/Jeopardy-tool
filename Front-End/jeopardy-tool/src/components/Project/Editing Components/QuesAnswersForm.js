@@ -3,6 +3,7 @@ import Api from "../../../Api";
 import { useParams } from "react-router-dom";
 import UserInfoContext from "../../../context/UserInfoContext";
 import LoadingSpinner from "../../../helpers/LoadingSpinner";
+import { useSelector } from "react-redux";
 
 function QuesAnswersForm({ column_id }) {
   const INITIAL_STATE = { question: "", answer: "" };
@@ -10,19 +11,26 @@ function QuesAnswersForm({ column_id }) {
   const [formData, setFormData] = useState(INITIAL_STATE);
   const [isLoaded, setIsLoaded] = useState(false);
   const [quesData, setQuesData] = useState(QUES_DATA_STATE);
+  const [currColumn, setCurrColumn] = useState("none");
   const { proj_id } = useParams();
   const { currentUser } = useContext(UserInfoContext);
+  const { colEditName } = useSelector((state) => state.columnAndQuestion);
 
   useEffect(
     function loadQuestionAnswers() {
       async function getQuestionData() {
-        if (!isLoaded) {
+        setCurrColumn(colEditName);
+
+        if (!isLoaded || currColumn !== colEditName) {
+          setQuesData([]);
+          setFormData({ question: "", answer: "" });
           try {
             const data = await Api.getQuesandAnswers({
               proj_id,
               currentUser,
               column_id,
             });
+            console.log(data);
             const questions = JSON.parse(data.results.questions);
             const answers = JSON.parse(data.results.answers);
             if (answers.length) {
@@ -41,7 +49,7 @@ function QuesAnswersForm({ column_id }) {
       setIsLoaded(false);
       getQuestionData();
     },
-    [column_id, currentUser, isLoaded, proj_id]
+    [column_id, currentUser, isLoaded, proj_id, colEditName, currColumn]
   );
 
   function handleChange(e) {
@@ -53,13 +61,15 @@ function QuesAnswersForm({ column_id }) {
     }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     let dataCopy = quesData.slice();
     dataCopy.push(formData);
     setQuesData(dataCopy);
+    const data = { column_id, dataCopy };
+    await Api.saveQuesandAnswers({ data, proj_id, currentUser });
   }
-  if (!isLoaded) return <LoadingSpinner />;
+  if (!isLoaded || currColumn !== colEditName) return <LoadingSpinner />;
   return (
     <div>
       <h3>Add Question and Answer</h3>
@@ -85,6 +95,22 @@ function QuesAnswersForm({ column_id }) {
       <button className="btn btn-success" onClick={handleSubmit}>
         Add
       </button>
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Question</th>
+            <th scope="col">Answer</th>
+          </tr>
+        </thead>
+        <tbody>
+          {quesData.map((q) => (
+            <tr>
+              <td>{q.question}</td>
+              <td>{q.answer}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

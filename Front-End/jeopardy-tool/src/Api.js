@@ -96,6 +96,15 @@ class JeopardyApi {
     );
     return res.data;
   }
+
+  static async saveQuesandAnswers({ proj_id, currentUser, data, column_id }) {
+    let res = await this.request(
+      `projects/${currentUser.username}/project/${proj_id}/${column_id}/getQuesandAnswers`,
+      { data },
+      "post"
+    );
+    return res.data;
+  }
 }
 
 export default JeopardyApi;

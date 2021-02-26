@@ -125,4 +125,24 @@ router.get(
   }
 );
 
+router.post(
+  "/:username/project/:proj_id/:column_id/getQuesandAnswers",
+  ensureCorrectUser,
+  async function (req, res, next) {
+    try {
+      let { proj_id, column_id } = req.params;
+      let { data } = req.body;
+      console.log(data);
+      const results = await User.saveQuesandAnswers({
+        proj_id,
+        column_id,
+        data,
+      });
+      return res.json({ results });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 module.exports = router;

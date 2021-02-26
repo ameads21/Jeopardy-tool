@@ -279,6 +279,31 @@ class User {
       answers: quesandanswers.rows[0].answers,
     };
   }
+
+  static async saveQuesandAnswers({ proj_id, data }) {
+    const { column_id, dataCopy } = data;
+    const questions = [];
+    const answers = [];
+    dataCopy.map((q) => {
+      questions.push(`"${q.question}"`);
+      answers.push(`"${q.answer}"`);
+    });
+
+    const stringQuestions = `[${questions.toString()}]`;
+    const stringAnswers = `[${answers.toString()}]`;
+
+    const style_id = await db.query(
+      `select styles.id from styles inner join columns on columns.id = styles.column_id where
+      columns.column_id = $1 and styles.project_id = $2`,
+      [column_id, proj_id]
+    );
+
+    console.log(style_id.rows[0].id);
+    await db.query(
+      `UPDATE quesandanswers SET questions = $1, answers = $2 where style_id = $3`,
+      [stringQuestions, stringAnswers, style_id.rows[0].id]
+    );
+  }
 }
 
 module.exports = User;
