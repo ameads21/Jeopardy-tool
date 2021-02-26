@@ -69,6 +69,15 @@ function QuesAnswersForm({ column_id }) {
     const data = { column_id, dataCopy };
     await Api.saveQuesandAnswers({ data, proj_id, currentUser });
   }
+
+  async function handleDelete(id) {
+    const dataCopy = quesData.slice();
+    dataCopy.splice(id, 1);
+    setQuesData(dataCopy);
+    const data = { column_id, dataCopy };
+    await Api.saveQuesandAnswers({ data, proj_id, currentUser });
+  }
+
   if (!isLoaded || currColumn !== colEditName) return <LoadingSpinner />;
   return (
     <div>
@@ -103,10 +112,13 @@ function QuesAnswersForm({ column_id }) {
           </tr>
         </thead>
         <tbody>
-          {quesData.map((q) => (
+          {quesData.map((q, v) => (
             <tr>
               <td>{q.question}</td>
               <td>{q.answer}</td>
+              <button type="button" onClick={() => handleDelete(v)}>
+                Delete
+              </button>
             </tr>
           ))}
         </tbody>

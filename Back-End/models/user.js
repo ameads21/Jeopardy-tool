@@ -284,10 +284,12 @@ class User {
     const { column_id, dataCopy } = data;
     const questions = [];
     const answers = [];
-    dataCopy.map((q) => {
-      questions.push(`"${q.question}"`);
-      answers.push(`"${q.answer}"`);
-    });
+    if (dataCopy.length) {
+      dataCopy.map((q) => {
+        questions.push(`"${q.question}"`);
+        answers.push(`"${q.answer}"`);
+      });
+    }
 
     const stringQuestions = `[${questions.toString()}]`;
     const stringAnswers = `[${answers.toString()}]`;
