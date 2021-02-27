@@ -112,7 +112,7 @@ class JeopardyApi {
       `projects/${currentUser.username}/project/${proj_id}/startProject`,
       {}
     );
-    return res.data.results;
+    return res.data;
   }
 }
 

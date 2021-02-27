@@ -23,8 +23,7 @@ function ToggleSwitch() {
         currentUser,
         proj_id,
       });
-      const newData = [];
-      console.log(quesandAnswers[0]);
+      startGame(quesandAnswers);
     }
   }
   return (

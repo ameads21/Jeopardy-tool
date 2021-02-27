@@ -317,8 +317,7 @@ class User {
       [proj_id]
     );
 
-    let data = [];
-    function clean(results) {
+    async function clean(results, data = []) {
       if (
         results.rows[results.rows.length - 1].questions == "[]" ||
         results.rows[results.rows.length - 1].questions.length === 0
@@ -326,7 +325,7 @@ class User {
         results.rows.pop();
       }
       if (results.rows.length === 0) {
-        return 0;
+        return data;
       }
       const rowLength = results.rows.length - 1;
       let questions;
@@ -345,44 +344,20 @@ class User {
         data[`Column${rowLength}`] = [];
       }
       data[`Column${rowLength}`].push({
-        question: questions.pop(),
-        answer: answers.pop(),
-        filters: filters.pop(),
+        question: questions.pop() || "No Question Found",
+        answer: answers.pop() || "No Answer Found",
+        filters: filters.pop() || "No Filters Found",
       });
       results.rows[rowLength].questions = questions;
       results.rows[rowLength].answers = answers;
       results.rows[rowLength].filters = filters;
 
-      return clean(results);
+      return clean(results, data);
     }
 
-    clean(results);
-    console.log(data);
+    const data = await clean(results);
 
-    // if (results.rows[results.rows.length - 1].questions == "[]") {
-    //   const newResults = results.rows.slice();
-    //   newResults.pop();
-    //   console.log("***************8");
-    //   console.log(results.rows);
-    //   console.log(newResults.length);
-    // } else {
-    //   const rowLength = results.rows.length - 1;
-    //   let questions = JSON.parse(results.rows[rowLength].questions);
-    //   let answers = JSON.parse(results.rows[rowLength].answers);
-    //   let filters = JSON.parse(results.rows[rowLength].filters);
-    //   if (!data[`Column${rowLength}`]) {
-    //     data[`Column${rowLength}`] = [];
-    //   }
-    //   data[`Column${rowLength}`].push({
-    //     question: questions.pop(),
-    //     answer: answers.pop(),
-    //     filters: filters.pop(),
-    //   });
-    //   console.log(data);
-    // }
-    // console.log(Object.values(data));
-    // console.log(JSON.stringify(results.rows[0].questions == "[]"));
-    return results.rows;
+    return { data };
   }
 }
 
