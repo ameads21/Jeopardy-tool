@@ -3,6 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 import ModalContext from "../../context/ModalContext";
 function ModalDisplay() {
   const { handleClose, show } = useContext(ModalContext);
+  
 
   return (
     <>

@@ -340,10 +340,10 @@ class User {
         answers = results.rows[rowLength].answers;
         filters = results.rows[rowLength].filters;
       }
-      if (!data[`Column${rowLength}`]) {
-        data[`Column${rowLength}`] = [];
+      if (!data[`column${rowLength + 1}`]) {
+        data[`column${rowLength + 1}`] = [];
       }
-      data[`Column${rowLength}`].push({
+      data[`column${rowLength + 1}`].push({
         question: questions.pop() || "No Question Found",
         answer: answers.pop() || "No Answer Found",
         filters: filters.pop() || "No Filters Found",

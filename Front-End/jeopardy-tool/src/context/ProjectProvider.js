@@ -166,6 +166,40 @@ const ProjectProvider = ({ children }) => {
     setAllQuesData(data);
   }
 
+  function pickQuestion(
+    column_id,
+    value,
+    questionData = JSON.parse(
+      JSON.stringify(allQuesData[column_id.replace("category-", "column")])
+    )
+  ) {
+    if (questionData.length === 0) {
+      return { question: "No Question Found", answer: "No Answer Found" };
+    }
+    let randomizer = Math.floor(Math.random() * questionData.length);
+
+    questionData[randomizer].filters = JSON.parse(
+      questionData[randomizer].filters
+    );
+    if (!questionData[randomizer].filters.includes(Number(value))) {
+      questionData.splice(randomizer, 1);
+      return pickQuestion(column_id, value, questionData);
+    } else {
+      let temp_array = JSON.parse(JSON.stringify(allQuesData));
+      let filtered_array = temp_array[
+        column_id.replace("category-", "column")
+      ].filter((i) => {
+        i.filters = JSON.parse(i.filters);
+        return JSON.stringify(questionData[randomizer]) !== JSON.stringify(i);
+      });
+
+      temp_array[column_id.replace("category-", "column")] = filtered_array;
+
+      setAllQuesData(temp_array);
+      return questionData[randomizer];
+    }
+  }
+
   return (
     <ProjectContext.Provider
       value={{
@@ -182,6 +216,7 @@ const ProjectProvider = ({ children }) => {
         exitEdit,
         updateEdit,
         startGame,
+        pickQuestion,
         allQuesData,
         isLoaded,
         columnNames,

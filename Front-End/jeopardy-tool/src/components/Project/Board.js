@@ -18,7 +18,7 @@ function Board() {
     getColumnData,
     styleData,
     updateEdit,
-    allQuesData,
+    pickQuestion,
   } = useContext(ProjectContext);
   let { proj_id } = useParams();
 
@@ -36,10 +36,11 @@ function Board() {
 
   function editColumn(btn) {
     const key = btn.target.className.split(" ")[0];
+    const value = btn.target.innerText;
     if (edit) {
       updateEdit({ key, proj_id });
     } else {
-      handleShow();
+      handleShow({ key, value });
       btn.target.disabled = true;
     }
   }
