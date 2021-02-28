@@ -13,32 +13,20 @@ function Nav() {
         Jeopardy Tool Name
       </Link>
       {currentUser ? (
-        <ul>
-          <li>
-            <Link to="/template" className="navbar-brand text-light">
-              Pick Template
-            </Link>
-          </li>
-          <li>
-            <Link to="/" onClick={logout}>
-              Logout
-            </Link>
-          </li>
-        </ul>
+        <div>
+          <Link to="/" onClick={logout} className="navbar-brand text-light">
+            Logout
+          </Link>
+        </div>
       ) : (
-        <ul>
-          <li>
-            <Link to="/login" className="navbar-brand text-light">
-              Login
-            </Link>
-          </li>
-
-          <li>
-            <Link to="/register" className="navbar-brand text-light">
-              Register
-            </Link>
-          </li>
-        </ul>
+        <div>
+          <Link to="/login" className="navbar-brand text-light">
+            Login
+          </Link>
+          <Link to="/register" className="navbar-brand text-light">
+            Register
+          </Link>
+        </div>
       )}
     </nav>
   );

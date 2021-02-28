@@ -48,9 +48,9 @@ function UserProjects() {
   }
 
   return (
-    <div className="container-fluid">
+    <div>
       <h1>My Projects</h1>
-      <div className="row">
+      <div className="container-fluid mt-5">
         <ProjectCard
           key={0}
           name="New Project"
@@ -58,19 +58,21 @@ function UserProjects() {
           btnText="Create"
           id="new-project/0"
         />
-        {!loadedData ? (
-          <LoadingSpinner />
-        ) : (
-          totalProjects.map((p) => (
-            <ProjectCard
-              key={p.id}
-              name={p.proj_name}
-              description={p.proj_description}
-              id={p.id}
-              deleteProject={deleteProject}
-            />
-          ))
-        )}
+        <div className="row">
+          {!loadedData ? (
+            <LoadingSpinner />
+          ) : (
+            totalProjects.map((p) => (
+              <ProjectCard
+                key={p.id}
+                name={p.proj_name}
+                description={p.proj_description}
+                id={p.id}
+                deleteProject={deleteProject}
+              />
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ function ProjectCard({
   const { currentUser } = useContext(UserInfoContext);
 
   return (
-    <div className="col-md-4 col-lg-3 mb-3" id={id}>
+    <div className="col-md-4 col-lg-3 mb-3 mx-auto mt-3" id={id}>
       <div className="card">
         {btnText === "Play/Edit" && (
           <div className="card-header">

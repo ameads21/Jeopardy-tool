@@ -135,7 +135,10 @@ function EditBar() {
           <QuesAnswersForm column_id={colEditName.match(/\d+/)[0]} />
         </div>
       </form>
-      <button className="btn btn-success" onClick={() => exitEdit({ proj_id })}>
+      <button
+        className="btn btn-success mt-3"
+        onClick={() => exitEdit({ proj_id })}
+      >
         Update
       </button>
     </div>

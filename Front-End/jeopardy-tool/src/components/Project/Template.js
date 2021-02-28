@@ -20,10 +20,10 @@ function Template() {
         try {
           let { results } = await Api.getColumns({ proj_id, currentUser });
           let { columnLength, questionLength } = results;
-          console.log(results);
           setColumnData(results);
           setInfoLoaded(true);
           if (results) {
+            dispatch({ type: "EDITACCESS" });
             updateColumnCount(columnLength);
             updateQuestionCount(questionLength);
           } else {
@@ -39,18 +39,15 @@ function Template() {
       }
       getColumnData();
     },
-    [proj_id, currentUser, updateColumnCount, updateQuestionCount]
+    [proj_id, currentUser, updateColumnCount, updateQuestionCount, dispatch]
   );
   if (!infoLoaded) {
     return <LoadingSpinner />;
-  } else {
-    console.log(columnData);
-    if (columnData.columnLength > 0) {
-      dispatch({ type: "EDITACCESS" });
-      return (
-        <Redirect to={`/${currentUser.username}/project/${proj_id}/project`} />
-      );
-    }
+  }
+  if (columnData.columnLength > 0) {
+    return (
+      <Redirect to={`/${currentUser.username}/project/${proj_id}/project`} />
+    );
   }
   return (
     <div>
