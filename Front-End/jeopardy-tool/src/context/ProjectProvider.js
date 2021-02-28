@@ -170,9 +170,12 @@ const ProjectProvider = ({ children }) => {
     column_id,
     value,
     questionData = JSON.parse(
-      JSON.stringify(allQuesData[column_id.replace("category-", "column")])
+      JSON.stringify(
+        allQuesData[column_id.replace("category-", "column")] || []
+      )
     )
   ) {
+    console.log(questionData);
     if (questionData.length === 0) {
       return { question: "No Question Found", answer: "No Answer Found" };
     }
@@ -189,12 +192,15 @@ const ProjectProvider = ({ children }) => {
       let filtered_array = temp_array[
         column_id.replace("category-", "column")
       ].filter((i) => {
-        i.filters = JSON.parse(i.filters);
+        if (typeof questionData[randomizer].filters !== "string") {
+          questionData[randomizer].filters = JSON.stringify(
+            questionData[randomizer].filters
+          );
+        }
         return JSON.stringify(questionData[randomizer]) !== JSON.stringify(i);
       });
 
       temp_array[column_id.replace("category-", "column")] = filtered_array;
-
       setAllQuesData(temp_array);
       return questionData[randomizer];
     }

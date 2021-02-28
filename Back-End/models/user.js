@@ -313,7 +313,7 @@ class User {
 
   static async getProject({ proj_id }) {
     const results = await db.query(
-      "select questions, answers, filters from quesandanswers inner join styles on styles.id = quesandanswers.style_id where project_id = $1",
+      "select questions, answers, filters from quesandanswers inner join styles on styles.id = quesandanswers.style_id where project_id = $1 order by style_id",
       [proj_id]
     );
 
@@ -346,7 +346,7 @@ class User {
       data[`column${rowLength + 1}`].push({
         question: questions.pop() || "No Question Found",
         answer: answers.pop() || "No Answer Found",
-        filters: filters.pop() || "No Filters Found",
+        filters: filters.pop() || '["No Filters Found"]',
       });
       results.rows[rowLength].questions = questions;
       results.rows[rowLength].answers = answers;
@@ -356,6 +356,8 @@ class User {
     }
 
     const data = await clean(results);
+
+    console.log(data);
 
     return { data };
   }

@@ -6,6 +6,8 @@ const ModalProvider = ({ children }) => {
   const [show, setShow] = useState(false);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [value, setValue] = useState("");
+  const [questionSwitch, setQuestionSwitch] = useState(false);
 
   const { pickQuestion } = useContext(ProjectContext);
 
@@ -14,11 +16,28 @@ const ModalProvider = ({ children }) => {
   }
   function handleShow({ key, value }) {
     setShow(true);
+    setValue(value);
+    setQuestionSwitch(false);
     const data = pickQuestion(key, value);
+    setQuestion(data.question);
+    setAnswer(data.answer);
+  }
+  function handleSwitch() {
+    const temp_switch = !questionSwitch;
+    setQuestionSwitch(temp_switch);
   }
   return (
     <ModalContext.Provider
-      value={{ handleClose, handleShow, show, question, answer }}
+      value={{
+        handleClose,
+        handleShow,
+        handleSwitch,
+        questionSwitch,
+        show,
+        question,
+        answer,
+        value,
+      }}
     >
       {children}
     </ModalContext.Provider>

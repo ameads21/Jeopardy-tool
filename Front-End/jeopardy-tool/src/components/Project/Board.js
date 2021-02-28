@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import ModalContext from "../../context/ModalContext";
 import ProjectContext from "../../context/ProjectContext";
 import LoadingSpinner from "../../helpers/LoadingSpinner";
+import PlayerBoard from "./Player Components/PlayerBoard";
 
 function Board() {
   const dispatch = useDispatch();
@@ -18,7 +19,6 @@ function Board() {
     getColumnData,
     styleData,
     updateEdit,
-    pickQuestion,
   } = useContext(ProjectContext);
   let { proj_id } = useParams();
 
@@ -122,6 +122,7 @@ function Board() {
         </thead>
         <tbody>{renderQuesRows()}</tbody>
       </table>
+      <PlayerBoard />
     </div>
   );
 }

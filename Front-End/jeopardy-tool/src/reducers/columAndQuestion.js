@@ -1,7 +1,7 @@
 const INITAL_STATE = {
   numCol: 5,
   numQues: 5,
-  edit: false,
+  edit: true,
   colEditName: "category-0",
 };
 
