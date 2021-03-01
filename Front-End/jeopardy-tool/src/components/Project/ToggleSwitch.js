@@ -36,7 +36,7 @@ function ToggleSwitch() {
         onChange={handleChange}
       />
       <label className="custom-control-label" htmlFor="customSwitch1">
-        Toggle this switch element
+        {edit ? "Play" : "Edit"}
       </label>
     </div>
   );
