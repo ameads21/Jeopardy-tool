@@ -166,13 +166,15 @@ function QuesAnswersForm({ column_id, quesCount }) {
         </thead>
         <tbody>
           {quesData.map((q, v) => (
-            <tr>
+            <tr key={`tableValue${v}`}>
               <td>{q.question}</td>
               <td>{q.answer}</td>
               <td>{q.filter.toString()}</td>
-              <button type="button" onClick={() => handleDelete(v)}>
-                Delete
-              </button>
+              <td>
+                <button type="button" onClick={() => handleDelete(v)}>
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

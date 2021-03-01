@@ -94,7 +94,7 @@ function Board() {
           <button
             className={
               Object.entries(styleData).length === 0
-                ? `category-${tempCol} btn btn-secondary p-3`
+                ? `category-${tempCol} btn btn-primary p-3`
                 : `category-${tempCol} btn ${styleData[tempCol - 1].buttons
                     .toString()
                     .replace(/,/g, " ")}`

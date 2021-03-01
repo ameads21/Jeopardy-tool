@@ -31,7 +31,9 @@ function Register() {
   return (
     <div className=" hero" style={{ backgroundImage: "/HomeBackground.jpg" }}>
       <div className="container col-md-6 offset-md-3 col-lg-4 offset-lg-4">
-        <h3 className="mb-3">Register</h3>
+        <h3 className="mb-3" style={{ color: "white" }}>
+          Register
+        </h3>
 
         <div className="card">
           <div className="card-body">
