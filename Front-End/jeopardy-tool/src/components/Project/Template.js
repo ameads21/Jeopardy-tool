@@ -23,7 +23,7 @@ function Template() {
           setColumnData(results);
           setInfoLoaded(true);
           if (results) {
-            dispatch({ type: "EDITACCESS" });
+            dispatch({ type: "STARTPROJECT" });
             updateColumnCount(columnLength);
             updateQuestionCount(questionLength);
           } else {

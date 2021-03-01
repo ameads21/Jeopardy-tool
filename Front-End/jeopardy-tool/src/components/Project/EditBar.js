@@ -66,7 +66,7 @@ function EditBar() {
   return (
     <div>
       <button
-        className="float-right mt-3 mr-4"
+        className="float-right mt-3 mr-4 btn btn-danger"
         onClick={() => exitEdit({ proj_id })}
       >
         X
@@ -196,13 +196,13 @@ function EditBar() {
             </div>
           </div>
         </Collapse>
+        <button
+          className="btn btn-success mt-3"
+          onClick={() => exitEdit({ proj_id })}
+        >
+          Update
+        </button>
       </form>
-      <button
-        className="btn btn-success mt-3"
-        onClick={() => exitEdit({ proj_id })}
-      >
-        Update
-      </button>
     </div>
   );
 }

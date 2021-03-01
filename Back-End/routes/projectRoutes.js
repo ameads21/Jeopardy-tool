@@ -132,7 +132,6 @@ router.post(
     try {
       let { proj_id, column_id } = req.params;
       let { data } = req.body;
-      console.log(data);
       const results = await User.saveQuesandAnswers({
         proj_id,
         column_id,

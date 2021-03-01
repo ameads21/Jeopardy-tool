@@ -13,6 +13,12 @@ function rootReducer(state = INITAL_STATE, action) {
     case "CURRENTEDIT":
       return { ...state, colEditName: action.key };
 
+    case "STARTPROJECT":
+      return { ...state, edit: true };
+
+    case "EXITPROJECT":
+      return { ...state, edit: true };
+
     default:
       return state;
   }

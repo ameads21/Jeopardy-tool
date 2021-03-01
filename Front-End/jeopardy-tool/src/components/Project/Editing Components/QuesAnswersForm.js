@@ -167,6 +167,7 @@ function QuesAnswersForm({ column_id, quesCount }) {
             <th scope="col">Question</th>
             <th scope="col">Answer</th>
             <th scope="col">Filters</th>
+            <th scope="col">Deletion</th>
           </tr>
         </thead>
         <tbody>
@@ -176,7 +177,11 @@ function QuesAnswersForm({ column_id, quesCount }) {
               <td>{q.answer}</td>
               <td>{q.filter.toString()}</td>
               <td>
-                <button type="button" onClick={() => handleDelete(v)}>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(v)}
+                  className="btn btn-danger"
+                >
                   Delete
                 </button>
               </td>

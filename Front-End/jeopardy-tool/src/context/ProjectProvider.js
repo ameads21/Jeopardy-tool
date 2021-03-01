@@ -52,6 +52,7 @@ const ProjectProvider = ({ children }) => {
     setIsLoaded(false);
     setColumnNames([]);
     dispatch({ type: "CURRENTEDIT", key: "category-0" });
+    dispatch({ type: "EXITPROJECT" });
   }
 
   async function updateColumnNames({ proj_id }) {

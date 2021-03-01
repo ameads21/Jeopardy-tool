@@ -13,7 +13,6 @@ router.get("/", (req, res, next) => {
 
 router.post("/login", async function (req, res, next) {
   try {
-    console.log(req.body);
     const validator = jsonschema.validate(req.body, userAuthSchema);
     if (!validator.valid) {
       const errs = validator.errors.map((e) => e.stack);

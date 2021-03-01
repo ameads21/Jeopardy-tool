@@ -357,8 +357,6 @@ class User {
 
     const data = await clean(results);
 
-    console.log(data);
-
     return { data };
   }
 }
