@@ -61,7 +61,6 @@ function EditBar() {
   }
 
   if (!isLoaded) return <LoadingSpinner />;
-  console.log(textData.TEXTinnerText);
 
   return (
     <div>

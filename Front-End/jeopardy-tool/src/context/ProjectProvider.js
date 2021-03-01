@@ -152,12 +152,12 @@ const ProjectProvider = ({ children }) => {
       textData,
       id: colEditName.split("-")[1],
     };
-    console.log(columnNames[key.split("-")[1] - 1]);
 
     const test = {
       TEXTtext_color: "",
       TEXTbackground_color: "",
-      TEXTinnerText: columnNames[key.split("-")[1] - 1],
+      TEXTinnerText:
+        columnNames[key.split("-")[1] - 1] || `Column ${key.split("-")[1]}`,
     };
     await Api.saveCategoryName({ proj_id, currentUser, data });
     await Api.saveStyleButtons({
