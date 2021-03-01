@@ -152,6 +152,13 @@ const ProjectProvider = ({ children }) => {
       textData,
       id: colEditName.split("-")[1],
     };
+    console.log(columnNames[key.split("-")[1] - 1]);
+
+    const test = {
+      TEXTtext_color: "",
+      TEXTbackground_color: "",
+      TEXTinnerText: columnNames[key.split("-")[1] - 1],
+    };
     await Api.saveCategoryName({ proj_id, currentUser, data });
     await Api.saveStyleButtons({
       proj_id,
@@ -160,7 +167,7 @@ const ProjectProvider = ({ children }) => {
     });
     dispatch({ type: "CURRENTEDIT", key });
     setBtnData(BTN_INITAL_STATE);
-    setTextData(TEXT_INITAL_STATE);
+    setTextData(test);
   }
 
   function startGame(data) {

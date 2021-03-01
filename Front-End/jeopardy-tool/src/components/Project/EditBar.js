@@ -27,7 +27,6 @@ function EditBar() {
     questionCount,
   } = useContext(ProjectContext);
   const { colEditName } = useSelector((state) => state.columnAndQuestion);
-
   const { proj_id } = useParams();
   const { currentUser } = useContext(UserInfoContext);
   const colors = [
@@ -62,6 +61,7 @@ function EditBar() {
   }
 
   if (!isLoaded) return <LoadingSpinner />;
+  console.log(textData.TEXTinnerText);
 
   return (
     <div>
@@ -85,6 +85,7 @@ function EditBar() {
                 aria-controls="ques-collapse-text"
                 aria-expanded={buttonOpen}
                 className="btn btn-link"
+                type="button"
               >
                 Buttons
               </button>
@@ -124,6 +125,7 @@ function EditBar() {
                 aria-controls="ques-collapse-text"
                 aria-expanded={textOpen}
                 className="btn btn-link"
+                type="button"
               >
                 Category
               </button>
@@ -140,7 +142,7 @@ function EditBar() {
                   name="TEXTinnerText"
                   type="text"
                   onChange={handleChangeText}
-                  value={textData["innerText"]}
+                  value={textData.TEXTinnerText}
                   id="TEXTinnerText"
                 />
               </div>
@@ -177,6 +179,7 @@ function EditBar() {
                 aria-controls="ques-collapse-text"
                 aria-expanded={quesOpen}
                 className="btn btn-link"
+                type="button"
               >
                 Question and Answers
               </button>
