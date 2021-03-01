@@ -19,7 +19,7 @@ function QuesAnswersForm({ column_id, quesCount }) {
   const { proj_id } = useParams();
   const { currentUser } = useContext(UserInfoContext);
   const { colEditName } = useSelector((state) => state.columnAndQuestion);
-  const [quesArray, setQuesArray] = useState([...Array(quesCount - 1).fill()]);
+  const [quesArray] = useState([...Array(quesCount - 1).fill()]);
 
   useEffect(
     function loadQuestionAnswers() {
@@ -129,34 +129,39 @@ function QuesAnswersForm({ column_id, quesCount }) {
   return (
     <div>
       <h3>Add Question and Answer</h3>
-      <label htmlFor="question">Question</label>
-      <input
-        type="text"
-        value={formData.question}
-        placeholder="What is 2+2?"
-        name="question"
-        id="question"
-        onChange={handleChange}
-      />
-
-      <label htmlFor="answer">Answer</label>
-      <input
-        type="text"
-        value={formData.answer}
-        placeholder="4"
-        name="answer"
-        id="answer"
-        onChange={handleChange}
-      />
-      <br />
+      <div className="form-group container">
+        <label htmlFor="question">Question</label>
+        <input
+          type="text"
+          value={formData.question}
+          placeholder="What is 2+2?"
+          name="question"
+          id="question"
+          onChange={handleChange}
+          className="form-control"
+        />
+      </div>
+      <div className="form-group container">
+        <label htmlFor="answer">Answer</label>
+        <input
+          type="text"
+          value={formData.answer}
+          placeholder="4"
+          name="answer"
+          id="answer"
+          onChange={handleChange}
+          className="form-control"
+        />
+      </div>
       <p>Filter</p>
-
-      {quesArray.map((k, i) => filterValues(i + 1))}
+      <div className="form-check container">
+        {quesArray.map((k, i) => filterValues(i + 1))}
+      </div>
       <br />
-      <button className="btn btn-success" onClick={handleSubmit}>
+      <button className="btn btn-primary" onClick={handleSubmit}>
         Add
       </button>
-      <table className="table">
+      <table className="table mt-3">
         <thead>
           <tr>
             <th scope="col">Question</th>

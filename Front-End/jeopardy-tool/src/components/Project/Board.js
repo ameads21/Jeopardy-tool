@@ -36,11 +36,14 @@ function Board() {
   function editColumn(btn) {
     const key = btn.target.className.split(" ")[0];
     const value = btn.target.innerText;
+    console.log(btn.target.localName);
     if (edit) {
       updateEdit({ key, proj_id });
     } else {
-      handleShow({ key, value });
-      btn.target.disabled = true;
+      if (btn.target.localName !== "th") {
+        handleShow({ key, value });
+        btn.target.disabled = true;
+      }
     }
   }
   let renderCol = () => {

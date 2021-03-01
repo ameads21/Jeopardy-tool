@@ -10,7 +10,7 @@ import UserInfoContext from "../../context/UserInfoContext";
 import ProjectContext from "../../context/ProjectContext";
 import LoadingSpinner from "../../helpers/LoadingSpinner";
 import QuesAnswersForm from "./Editing Components/QuesAnswersForm";
-import { Collapse, Button } from "react-bootstrap";
+import { Collapse } from "react-bootstrap";
 
 function EditBar() {
   const [buttonOpen, setButtonOpen] = useState(false);
@@ -133,10 +133,10 @@ function EditBar() {
         <Collapse in={textOpen}>
           <div id="edit-collapse-text">
             <div className="card card-body">
-              <div className="custom-control mx-auto custom-radio custom-control-inline">
-                <label htmlFor="TEXTinnerHTML">Category Name</label>
+              <div className="form-group container">
+                <label htmlFor="TEXTinnerHTML">Name: </label>
                 <input
-                  className="custom-conrol-inputs"
+                  className="form-control"
                   name="TEXTinnerText"
                   type="text"
                   onChange={handleChangeText}
