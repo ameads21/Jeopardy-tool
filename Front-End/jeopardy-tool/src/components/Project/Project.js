@@ -5,6 +5,7 @@ import EditBar from "./EditBar";
 import Modal from "./Modal";
 import "./Styling/Board.css";
 import ToggleSwitch from "./ToggleSwitch";
+import PlayerBoard from "./Player Components/PlayerBoard";
 
 function ProjectMain() {
   const { colEditName, edit } = useSelector((state) => state.columnAndQuestion);
@@ -15,6 +16,7 @@ function ProjectMain() {
         <div className="col">
           <Board />
           <ToggleSwitch />
+          <PlayerBoard />
         </div>
         {colEditName !== "category-0" && edit ? (
           <div className="col-md-5">

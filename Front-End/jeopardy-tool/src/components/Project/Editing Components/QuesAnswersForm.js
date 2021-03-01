@@ -5,11 +5,11 @@ import UserInfoContext from "../../../context/UserInfoContext";
 import LoadingSpinner from "../../../helpers/LoadingSpinner";
 import { useSelector } from "react-redux";
 
-function QuesAnswersForm({ column_id }) {
+function QuesAnswersForm({ column_id, quesCount }) {
   const INITIAL_STATE = {
     question: "",
     answer: "",
-    filter: ["100", "200", "300", "400", "500"],
+    filter: [],
   };
   const QUES_DATA_STATE = [];
   const [formData, setFormData] = useState(INITIAL_STATE);
@@ -19,6 +19,7 @@ function QuesAnswersForm({ column_id }) {
   const { proj_id } = useParams();
   const { currentUser } = useContext(UserInfoContext);
   const { colEditName } = useSelector((state) => state.columnAndQuestion);
+  const [quesArray, setQuesArray] = useState([...Array(quesCount - 1).fill()]);
 
   useEffect(
     function loadQuestionAnswers() {
@@ -30,7 +31,7 @@ function QuesAnswersForm({ column_id }) {
           setFormData({
             question: "",
             answer: "",
-            filter: ["100", "200", "300", "400", "500"],
+            filter: [],
           });
           try {
             const data = await Api.getQuesandAnswers({
@@ -105,6 +106,25 @@ function QuesAnswersForm({ column_id }) {
     await Api.saveQuesandAnswers({ data, proj_id, currentUser });
   }
 
+  function filterValues(num) {
+    return (
+      <div className="form-check form-check-inline" key={`FilterValue-${num}`}>
+        <input
+          className="form-check-input"
+          type="checkbox"
+          value={num * 100}
+          name="filter"
+          id={`filter-${num * 100}`}
+          checked={formData.filter.includes(`${num * 100}`)}
+          onChange={handleFilterChange}
+        />
+        <label className="form-check-label" htmlFor={`filter-${num * 100}`}>
+          {num * 100}
+        </label>
+      </div>
+    );
+  }
+
   if (!isLoaded || currColumn !== colEditName) return <LoadingSpinner />;
   return (
     <div>
@@ -130,80 +150,8 @@ function QuesAnswersForm({ column_id }) {
       />
       <br />
       <p>Filter</p>
-      <div className="form-check form-check-inline">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          value="100"
-          name="filter"
-          id="filter-100"
-          checked={formData.filter.includes("100")}
-          onChange={handleFilterChange}
-        />
-        <label className="form-check-label" htmlFor="filter-100">
-          100
-        </label>
-      </div>
 
-      <div className="form-check form-check-inline">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          checked={formData.filter.includes("200")}
-          value="200"
-          name="filter"
-          id="filter-200"
-          onChange={handleFilterChange}
-        />
-        <label className="form-check-label" htmlFor="filter-200">
-          200
-        </label>
-      </div>
-
-      <div className="form-check form-check-inline">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          checked={formData.filter.includes("300")}
-          value="300"
-          name="filter"
-          id="filter-300"
-          onChange={handleFilterChange}
-        />
-        <label className="form-check-label" htmlFor="filter-300">
-          300
-        </label>
-      </div>
-
-      <div className="form-check form-check-inline">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          checked={formData.filter.includes("400")}
-          value="400"
-          name="filter"
-          id="filter-400"
-          onChange={handleFilterChange}
-        />
-        <label className="form-check-label" htmlFor="filter-400">
-          400
-        </label>
-      </div>
-
-      <div className="form-check form-check-inline">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          checked={formData.filter.includes("500")}
-          value="500"
-          name="filter"
-          id="filter-500"
-          onChange={handleFilterChange}
-        />
-        <label className="form-check-label" htmlFor="filter-500">
-          500
-        </label>
-      </div>
+      {quesArray.map((k, i) => filterValues(i + 1))}
       <br />
       <button className="btn btn-success" onClick={handleSubmit}>
         Add

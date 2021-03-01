@@ -175,7 +175,6 @@ const ProjectProvider = ({ children }) => {
       )
     )
   ) {
-    console.log(questionData);
     if (questionData.length === 0) {
       return { question: "No Question Found", answer: "No Answer Found" };
     }

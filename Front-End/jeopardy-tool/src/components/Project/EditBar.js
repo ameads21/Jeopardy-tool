@@ -19,6 +19,7 @@ function EditBar() {
     handleChangeBtn,
     handleChangeText,
     exitEdit,
+    questionCount,
   } = useContext(ProjectContext);
   const { colEditName } = useSelector((state) => state.columnAndQuestion);
 
@@ -132,7 +133,10 @@ function EditBar() {
         </div>
         <div className="col-12">
           <hr></hr>
-          <QuesAnswersForm column_id={colEditName.match(/\d+/)[0]} />
+          <QuesAnswersForm
+            column_id={colEditName.match(/\d+/)[0]}
+            quesCount={questionCount + 1}
+          />
         </div>
       </form>
       <button

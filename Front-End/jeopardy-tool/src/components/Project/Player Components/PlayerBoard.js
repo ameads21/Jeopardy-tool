@@ -12,7 +12,6 @@ function PlayerBoard() {
 
   function addUser() {
     let user = prompt("Please Enter Name");
-    console.log(users.includes(user));
     while (users.includes(user)) {
       user = prompt("Please Pick A Different Name");
     }
@@ -25,7 +24,7 @@ function PlayerBoard() {
     <div>
       <div className="row">
         {users.map((u) => (
-          <PlayerScore username={u} removeUser={removeuser} />
+          <PlayerScore username={u} removeUser={removeuser} key={u} />
         ))}
       </div>
       <button className="btn btn-success mt-5" onClick={addUser}>

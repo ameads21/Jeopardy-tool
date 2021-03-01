@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import UserInfoContext from "../../context/UserInfoContext";
 import Api from "../../Api";
 import ProjectContext from "../../context/ProjectContext";
@@ -15,7 +14,6 @@ function ColForm() {
     updateQuestionCount,
   } = useContext(ProjectContext);
   const { proj_id } = useParams();
-  const dispatch = useDispatch();
 
   const incrementCol = () => {
     if (columnCount < 5) {
@@ -42,8 +40,6 @@ function ColForm() {
   async function handleSubmit(evt) {
     evt.preventDefault();
     const data = { columns: columnAssist(), questionCount };
-    console.log("Data questioncount");
-    console.log(data.questionCount);
     try {
       await Api.saveColumns({ currentUser, proj_id, data });
       history.push(`/${currentUser.username}/project/${proj_id}/project`);
