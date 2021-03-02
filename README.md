@@ -50,3 +50,6 @@ Languages, tools, and frameworks used in this project:
 - React Router
 - Axios
 - Visual Studios Code
+
+**Database Layout**
+![Design of Database](/DBDesign.png)
