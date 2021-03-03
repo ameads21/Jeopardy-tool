@@ -9,7 +9,7 @@ const { text } = require("express");
 class User {
   static async authenticate(username, password) {
     const result = await db.query(
-      `SELECT username, password, id
+      `SELECT username, password, email, id
         FROM users WHERE username = $1`,
       [username]
     );
@@ -52,6 +52,10 @@ class User {
     const user = result.rows[0];
 
     return user;
+  }
+
+  static async delete(username) {
+    await db.query("DELETE FROM users WHERE username = $1", [username]);
   }
 
   static async projects(username) {

@@ -14,6 +14,12 @@ function Nav() {
       </Link>
       {currentUser ? (
         <div>
+          <Link
+            to={`/${currentUser.username}/profile`}
+            className="navbar-brand text-light"
+          >
+            My Profile
+          </Link>
           <Link to="/" onClick={logout} className="navbar-brand text-light">
             Logout
           </Link>

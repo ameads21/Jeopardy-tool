@@ -23,8 +23,8 @@ function App() {
       async function getCurrentUser() {
         if (token) {
           try {
-            let { username, id } = jwt.decode(token);
-            setCurrentUser({ id, username });
+            let { username, email, id } = jwt.decode(token);
+            setCurrentUser({ id, username, email });
             Api.token = token;
           } catch (err) {
             console.error("Problem loading user", err);

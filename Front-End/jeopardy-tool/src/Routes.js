@@ -10,6 +10,7 @@ import UserProjects from "./components/Project/UserProjects";
 import UserRoutes from "./UserRoutes";
 import StartProjectForm from "./components/Project/New Project/StartProjectForm";
 import UserInfoContext from "./context/UserInfoContext";
+import Account from "./components/Account/Account";
 
 function Routes() {
   const { currentUser } = useContext(UserInfoContext);
@@ -26,6 +27,9 @@ function Routes() {
       </Route>
       {currentUser && (
         <>
+          <UserRoutes path={`/:username/profile`} exact>
+            <Account />
+          </UserRoutes>
           <UserRoutes
             path={`/${currentUser.username}/project/new-project/0`}
             exact

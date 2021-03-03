@@ -29,6 +29,11 @@ class JeopardyApi {
     return res;
   }
 
+  static async delete(username) {
+    let res = await this.request(`auth/${username}`, {}, "delete");
+    return res;
+  }
+
   static async getProjects(userdetails) {
     //
     let res = await this.request(`projects/${userdetails.username}`, {});
