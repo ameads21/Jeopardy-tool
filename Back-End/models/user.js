@@ -124,28 +124,15 @@ class User {
       [proj_id]
     );
 
-    const column_ids = column_rows.rows.map((id) => {
-      return `(${Object.values(id)}, ${proj_id})`;
-    });
-    const style_ids = await db.query(
-      `INSERT INTO styles(column_id, project_id) VALUES ${column_ids} RETURNING id`
-    );
-
-    const buttonQuery = style_ids.rows.map((id) => {
+    const buttonQuery = column_rows.rows.map((id) => {
       return `(${Object.values(id)})`;
     });
-    const textQuery = style_ids.rows.map((id) => {
+    const textQuery = column_rows.rows.map((id) => {
       return `(${Object.values(id)})`;
     });
-    const quesandanswersQuery = style_ids.rows.map((id) => {
-      return `(${Object.values(id)}, '[]', '[]', '[]')`;
-    });
 
-    await db.query(`INSERT INTO buttons (style_id) values ${buttonQuery}`);
-    await db.query(`INSERT INTO text (style_id) values ${textQuery}`);
-    await db.query(
-      `INSERT INTO quesandanswers (style_id, questions, answers, filters) values ${quesandanswersQuery}`
-    );
+    await db.query(`INSERT INTO buttons (column_id) values ${buttonQuery}`);
+    await db.query(`INSERT INTO text (column_id) values ${textQuery}`);
   }
 
   static async getColumns({ proj_id }) {
@@ -153,8 +140,8 @@ class User {
       `select projects.num_answers, columns.column_id, columns.column_name, buttons.text_color as button_text_color, buttons.background_color as button_background_color,
       buttons.padding as button_padding,
       text.text_color as text_text_color, text.background_color as text_background_color
-      from projects inner join columns on columns.project_id = projects.id inner join styles on styles.column_id = columns.id inner join buttons on styles.id = buttons.style_id inner join
-      text on styles.id = text.style_id where styles.project_id = $1 order by columns.column_id `,
+      from projects inner join columns on columns.project_id = projects.id inner join buttons on columns.id = buttons.column_id inner join
+      text on columns.id = text.column_id where columns.project_id = $1 order by columns.column_id `,
       [proj_id]
     );
 
@@ -214,12 +201,11 @@ class User {
     return result.rows;
   }
 
-  static async saveStyles({ proj_id, styleData }) {
+  static async saveStyles({ styleData, proj_id }) {
     const { btnData, textData, id } = styleData;
-
-    const style_id = await db.query(
-      `select styles.id from styles inner join columns on columns.id = styles.column_id where
-      columns.column_id = $1 and styles.project_id = $2`,
+    delete textData["TEXTinnerText"];
+    const column_id = await db.query(
+      "SELECT id FROM columns where column_id = $1 and project_id = $2",
       [id, proj_id]
     );
     function clean(obj) {
@@ -227,8 +213,7 @@ class User {
         if (
           obj[prop] === null ||
           obj[prop] === undefined ||
-          obj[prop] === "" ||
-          obj.TEXTinnerText
+          obj[prop].length === 0
         ) {
           delete obj[prop];
         }
@@ -246,117 +231,73 @@ class User {
     const textStyles = clean(textData);
 
     if (btnStyles.length > 0) {
-      const btnResults = await db.query(
-        `UPDATE buttons SET ${btnStyles.toString()} where style_id = $1`,
-        [style_id.rows[0].id]
+      await db.query(
+        `UPDATE buttons SET ${btnStyles.toString()} where column_id = $1`,
+        [column_id.rows[0].id]
       );
     }
 
     if (textStyles.length > 0) {
-      const textResults = await db.query(
-        `UPDATE text SET ${textStyles.toString()} where style_id = $1`,
-        [style_id.rows[0].id]
+      await db.query(
+        `UPDATE text SET ${textStyles.toString()} where column_id = $1`,
+        [column_id.rows[0].id]
       );
     }
 
     return { success: true };
   }
 
-  static async getQuesandAnswers({ proj_id, column_id }) {
-    const style_id = await db.query(
-      `select styles.id from styles inner join columns on columns.id = styles.column_id where
-      columns.column_id = $1 and styles.project_id = $2`,
+  static async getQuesandAnswers({ column_id, proj_id }) {
+    const column = await db.query(
+      `select id from columns where column_id = $1 and project_id = $2`,
       [column_id, proj_id]
     );
-
     const quesandanswers = await db.query(
-      `select questions, answers, filters from quesandanswers where style_id = $1`,
-      [style_id.rows[0].id]
+      `select id, question, answer, filters from quesandanswers where column_id = $1`,
+      [column.rows[0].id]
     );
 
-    return {
-      questions: quesandanswers.rows[0].questions,
-      answers: quesandanswers.rows[0].answers,
-      filters: quesandanswers.rows[0].filters,
-    };
+    const results = quesandanswers.rows;
+    return results;
   }
 
-  static async saveQuesandAnswers({ proj_id, data }) {
-    const { column_id, dataCopy } = data;
-    const questions = [];
-    const answers = [];
-    const filters = [];
-
-    if (dataCopy.length) {
-      dataCopy.map((q) => {
-        questions.push(`"${q.question}"`);
-        answers.push(`"${q.answer}"`);
-        filters.push(`"[${q.filter.toString()}]"`);
-      });
-    }
-
-    const stringQuestions = `[${questions.toString()}]`;
-    const stringAnswers = `[${answers.toString()}]`;
-    const stringFilters = `[${filters.toString()}]`;
-
-    const style_id = await db.query(
-      `select styles.id from styles inner join columns on columns.id = styles.column_id where
-      columns.column_id = $1 and styles.project_id = $2`,
-      [column_id, proj_id]
+  static async saveQuesandAnswers({ formData, proj_id, column_id }) {
+    const col_id = await db.query(
+      "SELECT id FROM columns where project_id = $1 and column_id = $2",
+      [proj_id, column_id]
     );
 
-    await db.query(
-      `UPDATE quesandanswers SET questions = $1, answers = $2, filters = $3 where style_id = $4`,
-      [stringQuestions, stringAnswers, stringFilters, style_id.rows[0].id]
+    const results = await db.query(
+      `INSERT INTO quesandanswers (column_id, question, answer, filters)  VALUES ($1, $2, $3, $4) returning id, question, answer, filters`,
+      [
+        col_id.rows[0].id,
+        formData.question,
+        formData.answer,
+        `[${formData.filters}]`,
+      ]
     );
+    return results.rows[0];
+  }
+
+  static async deleteQuesandAnswer({ quesId }) {
+    await db.query("DELETE FROM quesandanswers where id = $1", [quesId]);
   }
 
   static async getProject({ proj_id }) {
     const results = await db.query(
-      "select questions, answers, filters from quesandanswers inner join styles on styles.id = quesandanswers.style_id where project_id = $1 order by style_id",
+      "select columns.column_id, question, answer, filters from quesandanswers inner join columns on columns.id = quesandanswers.column_id where project_id = $1 order by columns.column_id",
       [proj_id]
     );
 
-    async function clean(results, data = []) {
-      if (
-        results.rows[results.rows.length - 1].questions == "[]" ||
-        results.rows[results.rows.length - 1].questions.length === 0
-      ) {
-        results.rows.pop();
-      }
-      if (results.rows.length === 0) {
-        return data;
-      }
-      const rowLength = results.rows.length - 1;
-      let questions;
-      let answers;
-      let filters;
-      if (typeof results.rows[rowLength].questions === "string") {
-        questions = JSON.parse(results.rows[rowLength].questions);
-        answers = JSON.parse(results.rows[rowLength].answers);
-        filters = JSON.parse(results.rows[rowLength].filters);
+    const data = [];
+    results.rows.map((i) => {
+      if (data[`Column ${i.column_id}`]) {
+        data[`Column ${i.column_id}`].push(i);
       } else {
-        questions = results.rows[rowLength].questions;
-        answers = results.rows[rowLength].answers;
-        filters = results.rows[rowLength].filters;
+        data[`Column ${i.column_id}`] = [];
+        data[`Column ${i.column_id}`].push(i);
       }
-      if (!data[`column${rowLength + 1}`]) {
-        data[`column${rowLength + 1}`] = [];
-      }
-      data[`column${rowLength + 1}`].push({
-        question: questions.pop() || "No Question Found",
-        answer: answers.pop() || "No Answer Found",
-        filters: filters.pop() || '["No Filters Found"]',
-      });
-      results.rows[rowLength].questions = questions;
-      results.rows[rowLength].answers = answers;
-      results.rows[rowLength].filters = filters;
-
-      return clean(results, data);
-    }
-
-    const data = await clean(results);
-
+    });
     return { data };
   }
 }

@@ -25,7 +25,7 @@ const AuthProvider = ({ children }) => {
       setToken(token);
       return { success: true };
     } catch (errors) {
-      console.err("Registeration failed", errors);
+      console.error("Registeration failed", errors);
       return { success: false, errors };
     }
   }

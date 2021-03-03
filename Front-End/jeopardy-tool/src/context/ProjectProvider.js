@@ -172,6 +172,7 @@ const ProjectProvider = ({ children }) => {
 
   function startGame(data) {
     setAllQuesData(data);
+    console.log(data);
   }
 
   function pickQuestion(
@@ -179,7 +180,7 @@ const ProjectProvider = ({ children }) => {
     value,
     questionData = JSON.parse(
       JSON.stringify(
-        allQuesData[column_id.replace("category-", "column")] || []
+        allQuesData[column_id.replace("category-", "Column ")] || []
       )
     )
   ) {
@@ -197,7 +198,7 @@ const ProjectProvider = ({ children }) => {
     } else {
       let temp_array = JSON.parse(JSON.stringify(allQuesData));
       let filtered_array = temp_array[
-        column_id.replace("category-", "column")
+        column_id.replace("category-", "Column ")
       ].filter((i) => {
         if (typeof questionData[randomizer].filters !== "string") {
           questionData[randomizer].filters = JSON.stringify(
@@ -207,7 +208,7 @@ const ProjectProvider = ({ children }) => {
         return JSON.stringify(questionData[randomizer]) !== JSON.stringify(i);
       });
 
-      temp_array[column_id.replace("category-", "column")] = filtered_array;
+      temp_array[column_id.replace("category-", "Column ")] = filtered_array;
       setAllQuesData(temp_array);
       return questionData[randomizer];
     }

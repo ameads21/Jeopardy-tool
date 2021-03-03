@@ -20,8 +20,8 @@ function UserProjects() {
     function loadProjects() {
       async function getProjects() {
         try {
-          let { projects } = await Api.getProjects(currentUser);
-          setTotalProjects(projects);
+          let { results } = await Api.getProjects(currentUser);
+          setTotalProjects(results);
           setLoadedData(true);
           if (isLoaded) {
             await exitProject();

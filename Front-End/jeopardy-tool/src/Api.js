@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const BASE_API_URL =
-  "https://jeopardy-tool-api.herokuapp.com" || "http://localhost:3001";
+const BASE_API_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 class JeopardyApi {
   static token;
@@ -20,24 +19,24 @@ class JeopardyApi {
   }
 
   static async register(data) {
+    //
     let res = await this.request(`auth/register`, data, "post");
     return res;
   }
   static async login(data) {
+    //
     let res = await this.request(`auth/login`, data, "post");
     return res;
   }
 
   static async getProjects(userdetails) {
-    let res = await this.request(
-      `projects/${userdetails.username}`,
-      {},
-      "post"
-    );
+    //
+    let res = await this.request(`projects/${userdetails.username}`, {});
     return res.data;
   }
 
   static async sendProjectDetails(data, userdetails) {
+    //
     let res = await this.request(
       `projects/${userdetails.username}/projectCreate`,
       data,
@@ -47,7 +46,8 @@ class JeopardyApi {
   }
 
   static async deleteProject({ id, currentUser }) {
-    let res = await this.request(
+    //
+    await this.request(
       `projects/${currentUser.username}/project/${id}`,
       {},
       "delete"
@@ -55,6 +55,7 @@ class JeopardyApi {
   }
 
   static async saveColumns({ proj_id, currentUser, data }) {
+    //
     let res = await this.request(
       `projects/${currentUser.username}/project/${proj_id}/columns`,
       { data },
@@ -64,6 +65,7 @@ class JeopardyApi {
   }
 
   static async getColumns({ proj_id, currentUser }) {
+    //
     let res = await this.request(
       `projects/${currentUser.username}/project/${proj_id}/columns`,
       {}
@@ -72,6 +74,7 @@ class JeopardyApi {
   }
 
   static async saveCategoryName({ proj_id, currentUser, data }) {
+    //
     let res = await this.request(
       `projects/${currentUser.username}/project/${proj_id}/titleSave`,
       { data },
@@ -81,6 +84,7 @@ class JeopardyApi {
   }
 
   static async saveStyleButtons({ proj_id, currentUser, styleData }) {
+    //
     let res = await this.request(
       `projects/${currentUser.username}/project/${proj_id}/styleSave`,
       { styleData },
@@ -97,13 +101,28 @@ class JeopardyApi {
     return res.data;
   }
 
-  static async saveQuesandAnswers({ proj_id, currentUser, data, column_id }) {
+  //Data ---> {question: "What's 2 + 2?", answer: "4", filters: [100,200,300]}
+  static async saveQuesandAnswers({
+    //
+    proj_id,
+    currentUser,
+    formData,
+    column_id,
+  }) {
     let res = await this.request(
       `projects/${currentUser.username}/project/${proj_id}/${column_id}/getQuesandAnswers`,
-      { data },
+      { formData },
       "post"
     );
     return res.data;
+  }
+
+  static async deleteQuesandAnswer({ proj_id, currentUser, id }) {
+    await this.request(
+      `projects/${currentUser.username}/project/${proj_id}/${id}/deleteQuesandAnswer`,
+      {},
+      "delete"
+    );
   }
 
   static async getAllQuesandAnswers({ proj_id, currentUser }) {
@@ -111,6 +130,7 @@ class JeopardyApi {
       `projects/${currentUser.username}/project/${proj_id}/startProject`,
       {}
     );
+    console.log(res);
     return res.data;
   }
 }

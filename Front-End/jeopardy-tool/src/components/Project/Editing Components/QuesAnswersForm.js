@@ -9,12 +9,11 @@ function QuesAnswersForm({ column_id, quesCount }) {
   const INITIAL_STATE = {
     question: "",
     answer: "",
-    filter: [],
+    filters: [],
   };
-  const QUES_DATA_STATE = [];
   const [formData, setFormData] = useState(INITIAL_STATE);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [quesData, setQuesData] = useState(QUES_DATA_STATE);
+  const [quesData, setQuesData] = useState([]);
   const [currColumn, setCurrColumn] = useState("none");
   const { proj_id } = useParams();
   const { currentUser } = useContext(UserInfoContext);
@@ -31,27 +30,25 @@ function QuesAnswersForm({ column_id, quesCount }) {
           setFormData({
             question: "",
             answer: "",
-            filter: [],
+            filters: [],
           });
           try {
-            const data = await Api.getQuesandAnswers({
+            const { results } = await Api.getQuesandAnswers({
               proj_id,
               currentUser,
               column_id,
             });
-            const questions = JSON.parse(data.results.questions);
-            const answers = JSON.parse(data.results.answers);
-            const filters = JSON.parse(data.results.filters);
-            if (answers.length) {
-              const results = [];
-              for (let i = 0; i < questions.length; i++) {
-                results.push({
-                  question: questions[i],
-                  answer: answers[i],
-                  filter: JSON.parse(filters[i]),
+            if (results.length) {
+              const data = [];
+              for (let i = 0; i < results.length; i++) {
+                data.push({
+                  id: results[i].id,
+                  question: results[i].question,
+                  answer: results[i].answer,
+                  filters: JSON.parse(results[i].filters),
                 });
               }
-              setQuesData(results);
+              setQuesData(data);
             }
           } catch (err) {
             console.error("Problem Loading Questions and Answers", err);
@@ -77,33 +74,38 @@ function QuesAnswersForm({ column_id, quesCount }) {
   function handleFilterChange(e) {
     const { name, value } = e.target;
     const tempData = Object.assign({}, formData);
-    if (tempData.filter.includes(value)) {
-      tempData.filter.splice(tempData.filter.indexOf(value), 1);
+    if (tempData.filters.includes(value)) {
+      tempData.filters.splice(tempData.filters.indexOf(value), 1);
     } else {
-      tempData.filter.push(value);
+      tempData.filters.push(value);
     }
     setFormData((data) => ({
       ...data,
-      [name]: tempData.filter,
+      [name]: tempData.filters,
     }));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const { results } = await Api.saveQuesandAnswers({
+      formData,
+      column_id,
+      proj_id,
+      currentUser,
+    });
+    results.filters = JSON.parse(results.filters);
     let dataCopy = quesData.slice();
-    dataCopy.push(formData);
+    dataCopy.push(results);
+    console.log(dataCopy);
     setQuesData(dataCopy);
     setFormData(INITIAL_STATE);
-    const data = { column_id, dataCopy };
-    await Api.saveQuesandAnswers({ data, proj_id, currentUser });
   }
 
-  async function handleDelete(id) {
+  async function handleDelete(id, idPosition) {
     const dataCopy = quesData.slice();
-    dataCopy.splice(id, 1);
+    dataCopy.splice(idPosition, 1);
     setQuesData(dataCopy);
-    const data = { column_id, dataCopy };
-    await Api.saveQuesandAnswers({ data, proj_id, currentUser });
+    await Api.deleteQuesandAnswer({ id, proj_id, currentUser });
   }
 
   function filterValues(num) {
@@ -113,12 +115,12 @@ function QuesAnswersForm({ column_id, quesCount }) {
           className="form-check-input"
           type="checkbox"
           value={num * 100}
-          name="filter"
-          id={`filter-${num * 100}`}
-          checked={formData.filter.includes(`${num * 100}`)}
+          name="filters"
+          id={`filters-${num * 100}`}
+          checked={formData.filters.includes(`${num * 100}`)}
           onChange={handleFilterChange}
         />
-        <label className="form-check-label" htmlFor={`filter-${num * 100}`}>
+        <label className="form-check-label" htmlFor={`filters-${num * 100}`}>
           {num * 100}
         </label>
       </div>
@@ -175,11 +177,11 @@ function QuesAnswersForm({ column_id, quesCount }) {
             <tr key={`tableValue${v}`}>
               <td>{q.question}</td>
               <td>{q.answer}</td>
-              <td>{q.filter.toString()}</td>
+              <td>{q.filters.toString()}</td>
               <td>
                 <button
                   type="button"
-                  onClick={() => handleDelete(v)}
+                  onClick={() => handleDelete(q.id, v)}
                   className="btn btn-danger"
                 >
                   Delete

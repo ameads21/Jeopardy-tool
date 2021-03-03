@@ -6,10 +6,10 @@ const { user } = require("../db");
 const router = express.Router();
 
 //Getting all projects from specified user
-router.post("/:username", ensureCorrectUser, async function (req, res, next) {
+router.get("/:username", ensureCorrectUser, async function (req, res, next) {
   try {
-    const projects = await User.projects(req.params.username);
-    return res.json({ projects });
+    const results = await User.projects(req.params.username);
+    return res.json({ results });
   } catch (err) {
     return next(err);
   }
@@ -131,11 +131,28 @@ router.post(
   async function (req, res, next) {
     try {
       let { proj_id, column_id } = req.params;
-      let { data } = req.body;
+      let { formData } = req.body;
       const results = await User.saveQuesandAnswers({
         proj_id,
         column_id,
-        data,
+        formData,
+      });
+      return res.json({ results });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.delete(
+  "/:username/project/:proj_id/:quesId/deleteQuesandAnswer",
+  ensureCorrectUser,
+  async function (req, res, next) {
+    try {
+      let { proj_id, quesId } = req.params;
+      const results = await User.deleteQuesandAnswer({
+        proj_id,
+        quesId,
       });
       return res.json({ results });
     } catch (err) {
