@@ -26,7 +26,7 @@ Have you ever wanted to create an easy jeopardy game? Well, now you can with the
 
 > When you are designing, you will retrieve design information about each project you've created, column count, and much more!
 
-Try it today by clicking [here](https://ameads21.github.io/Jeopardy-Tool-Frontend/)
+Try it today by clicking [here](https://jeotool.herokuapp.com/)
 
 Languages, tools, and frameworks used in this project:
 
