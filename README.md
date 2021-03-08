@@ -1,6 +1,6 @@
 # JeoTool
 
-Have you ever wanted to create an easy jeopardy game? Well, now you can with the new jeopardy creation tool, JeoTool! With this tool, you're able to easily design, create, and play muliple games at once!
+Have you ever wanted to create an easy jeopardy game? Well, now you can with the new jeopardy creation tool, JeoTool! With this tool, you're able to easily design, create, and play multiple games at once!
 
 **Account Creation**
 
