@@ -3,9 +3,11 @@ const { getDatabaseUri } = require("./config");
 
 const db = new Client({
   connectionString: getDatabaseUri(),
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl: process.env.DATABASE_URL
+    ? {
+        rejectUnauthorized: false,
+      }
+    : false,
 });
 
 db.connect();
